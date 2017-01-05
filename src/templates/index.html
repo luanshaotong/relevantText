@@ -2,19 +2,17 @@ $def with (namestr, form_entitys, rele_text, page=1,fullpath='/')
 
 
 		<form name = "search" method="post">
-			subject:
-			<input type="text" name="subject" value=$namestr>
+			<textarea name="subject" rows="5" cols="80">$namestr</textarea>
 			<br/>
 			$for entitys in form_entitys
-				<input type="checkbox" name="entitys" value=$entitys[0] $entitys[1]>$entitys[0]
-			<br/>
+				<input type="checkbox" name="entitys" value=$:entitys[0] $:entitys[1]>$:entitys[0]
 			<input type="submit" value="submit"/>
 		</form>
 
 	$if rele_text is not None :  
 		<div id="context">
 		<h2> Return </h2>
-	    <table border="list">
+	    <table>
 		$for row in rele_text[1]:
 			<tr>
 				<td> $row[0] </td>

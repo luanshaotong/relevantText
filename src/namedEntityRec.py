@@ -1,26 +1,32 @@
 #coding=utf-8
 
 try:
-    from nltk.tag.stanford import StanfordNERTagger
+    from nltk import ne_chunk, pos_tag, word_tokenize
+    from nltk.tree import Tree
 except Exception,e :
     count = 1
 else:
     count = 0
 
 if count ==0:
-    def namedEntityRec(namestr):
-        st = StanfordNERTagger('english.all.3class.distsim.crf.ser.gz')
-        #st = StanfordNERTagger('/usr/share/stanford-ner/classifiers/all.3class.distsim.crf.ser.gz','/usr/share/stanford-ner/stanford-ner.jar')
-        #st = StanfordNERTagger('C:/usrs/smilelife1979/stanford-ner-2015-12-09/classifiers/english.all.3class.distsim.crf.ser.gz','C:\usrs\smilelife1979\stanford-ner-2015-12-09\stanford-ner.jar')
-        #st = StanfordNERTagger('englsih.all.3class.distsim.crf.ser.gz','stanford-ner.jar')
-        st.tag('Rami Eid is studying at Stony Brook University in NY'.split())
-        entities_return=[]
-        for num in st:
-            if st[num]=='PERSON'|st[num]=='ORGANIZATION'|st[num]=='LOCATION':
-                entities_return.append([str(num[0])])
-        return entities_return
+    def get_NamedEntity(text):
+        chunked = ne_chunk(pos_tag(word_tokenize(text)))
+        prev = None
+        continuous_chunk = []
+        current_chunk = []
+        for i in chunked:
+            if type(i) == Tree:
+                current_chunk.append(" ".join([token for token, pos in i.leaves()]))
+            elif current_chunk:
+                named_entity = " ".join(current_chunk)
+                if named_entity not in continuous_chunk:
+                    continuous_chunk.append(named_entity)
+                    current_chunk = []
+            else:
+                continue
+        return continuous_chunk
 else :
-    def namedEntityRec(namestr):
-        entities_return = [u'Entity1',u'Entity2',u'Entity3']
+    def get_NamedEntity(namestr):
+        entities_return = [u"Entity1 1123414",u"Entity2'sdgdsa",u'Entity3"asfgds']
         return entities_return
 

@@ -1,5 +1,6 @@
 #coding=utf-8
 try:
+    raise "sjafs"
     from nltk.tokenize import word_tokenize
     from nltk.corpus import stopwords
     from nltk.stem.lancaster import LancasterStemmer
