@@ -81,7 +81,7 @@ else:
     def findRelevantText(namestr):
         #return
         sims_return = []
-        for num in range(0,11):
+        for num in range(0,21):
             sims_return.append(['1','2','3','4'])
             #print 'course num:'+str(num[0])
             #print 'course name:'+courses_name[num[0]]

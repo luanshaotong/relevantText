@@ -1,37 +1,35 @@
-$def with (form, rela_context, ident)  
+$def with (namestr, form_entitys, rele_text, page=1,fullpath='/')  
 
 
 		<form name = "search" method="post">
 			subject:
-			<input type="text" name="subject" value=$form[0]>
+			<input type="text" name="subject" value=$namestr>
+			<br/>
+			$for entitys in form_entitys
+				<input type="checkbox" name="entitys" value=$entitys[0] $entitys[1]>$entitys[0]
 			<br/>
 			<input type="submit" value="submit"/>
 		</form>
 
-	$if rela_context is not None :  
-		<form name = "test" method="post">
+	$if rele_text is not None :  
 		<div id="context">
 		<h2> Return </h2>
 	    <table border="list">
-	    $ head = ident*10
-		$for row in rela_context[head:min(head+10,len(rela_context))]:
+		$for row in rele_text[1]:
 			<tr>
 				<td> $row[0] </td>
 				<td> $row[1] </td>
 				<td> $row[2] </td>
 				<td> $row[3] </td>
-				<td> <input type="checkbox" name="check" value=$row[2]>
 			</tr>
 		</table>
 		</div>
-			<input type="submit" value="123"/>
-		</form>
-		$if ident>0:
-			<a href="/index/$:(ident-1)" mce_href="page:$(ident-1)">page up</a>
-		$for i in range(1,(len(rela_context)-1)/10+2)
-			$if ident+1 !=i:
-				<a href="/index/$:(i-1)" mce_href="page:$(i-1)">$i</a>
+		$if page>1:
+			<a href="$:(fullpath+'&page=')$:(page-1)" mce_href="page:$(page-1)">page up</a>
+		$for i in range(1,rele_text[0]+1)
+			$if page !=i:
+				<a href="$:(fullpath+'&page=')$:i" mce_href="page:$:i">$:i</a>
 			$else:
 				 $i
-		$if (ident+1)*10<len(rela_context):
-			<a href="/index/$:(ident+1)" mce_href="page:$(ident+1)">page down</a>
+		$if page<rele_text[0]:
+			<a href="$:(fullpath+'&page=')$:(page+1)" mce_href="page:$(page+1)">page down</a>
