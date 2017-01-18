@@ -26,7 +26,8 @@ gamma = 0.15
 def CrawlBingData(queryStrInput):
 	#queryStr = raw_input('Please input the query word(s), separated by space: ')
 	queryStr=queryStrInput
-	target = raw_input('Please input the target precision: ')
+	#target = raw_input('Please input the target precision: ')
+	target = 1
 	#accKey = raw_input('Please input the Bing account key: ')
 
 	try:
