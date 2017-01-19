@@ -9,9 +9,6 @@ import math
 import string
 from nltk.corpus import stopwords
 
-from goose import Goose
-from gensim.summarization import summarize
-
 rootURL = 'https://api.datamarket.azure.com/Bing/Search/v1/Web'
 # To be substituted
 accKey = 'gQ+gama5GAfLoQmix8AKEn5Nop24Tlu34tRapNPOImI'
@@ -21,38 +18,6 @@ N = 10
 alpha = 2.0
 beta = 0.75
 gamma = 0.15
-
-#queryStrInput='Hong Kong'
-def CrawlBingData(queryStrInput):
-	#queryStr = raw_input('Please input the query word(s), separated by space: ')
-	queryStr=queryStrInput
-	#target = raw_input('Please input the target precision: ')
-	target = 1
-	#accKey = raw_input('Please input the Bing account key: ')
-
-	try:
-		target = float(target)
-		if target < 0 or target > 1:
-			raise ValueError
-	except ValueError:
-		print 'Illegal precision!'
-		sys.exit()
-	# iteration times
-	times = 1
-	data, precision = startSearch(queryStr, times, accKey)
-
-	while precision > 0 and precision < target:
-		print 'Still below than the target precision of', target
-		queryStr = adjustQuery(queryStr, data)
-		times += 1
-		data, precision = startSearch(queryStr, times, accKey)
-	if precision == 0:
-		if data:
-			print 'No relevant documents. Terminated.'
-		else:
-			print 'Less than 10 results received. Terminated.'
-	else:
-		print 'Target precision reached. Done.'
 
 #calculate precison each iteration:
 def calcPrecison(data):
@@ -101,8 +66,7 @@ def startSearch(queryStr, times, accKey):
 		print ' Summary:', description
 		print ']'
 	for i in range(N):
-		rel = raw_input('\nResult '+str(i+1)+' Relevant (Y/N)?')
-		data[i]['rel'] = True if rel == 'Y' or rel == 'y' else False
+		data[i]['rel'] = False
 	#calculate precsion
 	precision = calcPrecison(data)
 	print '========================'
@@ -189,5 +153,3 @@ def rocchio(qvec, tfidf, data, word_set, old_query):
 	qwords.sort(key = lambda w: new_qvec[word_set.index(w)], reverse = True)
 	queryStr = ' '.join(qwords)
 	return queryStr
-
-#if __name__ == '__main__': CrawlBingData(queryStrInput='Hong Kong')

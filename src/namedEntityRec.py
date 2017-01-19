@@ -3,6 +3,7 @@
 try:
     from nltk import ne_chunk, pos_tag, word_tokenize
     from nltk.tree import Tree
+    raise 1
 except Exception,e :
     count = 1
 else:
@@ -27,6 +28,6 @@ if count ==0:
         return continuous_chunk
 else :
     def get_NamedEntity(namestr):
-        entities_return = [u"Entity1 1123414",u"Entity2'sdgdsa",u'Entity3"asfgds']
+        entities_return = [u"Hong",u"Kong"]
         return entities_return
 
