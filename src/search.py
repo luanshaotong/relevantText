@@ -4,7 +4,7 @@ import urllib
 import web
 import sys
 from data_cache import buffered_answer
-from data_cache import buffered_entitys
+from data_cache import buffered_entity
 #from coursera_graph import findRelevantText
 #URL映射  
 urls = (
@@ -17,59 +17,81 @@ t_globals = {
     'cookie': web.cookies,  
 }  
 #指定模板目录，并设定公共模板  
-render = web.template.render('templates', base='base', globals=t_globals)  
+render = web.template.render('templates', base='base', globals=t_globals) 
+
+query_cache = {} 
  
 #首页类  
 class Index:  
-    def GET(self,sym):
-        print(sym)
-        if (sym==''):
-            return render.index('',[],None) 
-        form  = web.input()
-        namestr = None
-        entitys_name = None
-        page = 1
-        choosed_entitys = None
-        for i in form:
-            if i=='name' :
-                namestr = form.name
-            elif i=='entity':
-                choosed_entitys = form.entity
-            elif i=='page':
-                page = int(form.page)
-        if namestr is None:
-            raise web.seeother('/')
-        all_entitys = buffered_entitys(namestr)
-        if choosed_entitys is not None:
-            entitys_name = choosed_entitys.split(';')
-            thisurl = web.ctx.path+'?name='+namestr+'&entity='+choosed_entitys
+    
+    def refreshEntities(self,namestr,choosed_entities):
+        page =1
+        all_entities = buffered_entity(namestr)
+        if choosed_entities is not None:
+            entities_name = choosed_entities.split(';')
+            thisurl = web.ctx.path+'?name='+namestr+'&entity='+choosed_entities
         else :
-            entitys_name = all_entitys
+            entities_name = all_entities
             thisurl = web.ctx.path+'?name='+namestr
-        rele_text = buffered_answer(entitys_name,page)
+        rele_text = buffered_answer(entities_name,page)
         form = []
-        for entity in all_entitys:
-            if entitys_name.count(entity)>0:
+        for entity in all_entities:
+            if entities_name.count(entity)>0:
                 form.append((entity,'checked ="true"'))
             else :
                 form.append((entity,''))
         #print(web.ctx.fullpath.find('page'))
         return render.index(namestr,form, rele_text,page,thisurl)  
+    
+    def newQuery(self,rec,id):
+        if id is None:
+            raise web.seeother('/')
+        if query_cache.has_key(id)==False:
+            raise web.seeother('/')
+        data = query_cache[id]
+        
+        
+    def GET(self,sym):
+        cookie_name = web.cookies.get("ident")
+        if cookie_name is None:
+            web.setcookie("ident", 123 , expires=3000, domain=None, secure=False)
+        print(sym)
+        if (sym==''):
+            return render.index('',[],None) 
+        form  = web.input()
+        namestr = None
+        entities_name = None
+        page = 1
+        choosed_entities = None
+        for i in form:
+            if i=='name' :
+                namestr = form.name
+            elif i=='entity':
+                choosed_entities = form.entity
+            elif i=='page':
+                page = int(form.page)
+        if namestr is None:
+            raise web.seeother('/')
+        return refreshEntities(namestr,choosed_entities)
+        
     def POST(self,sym):
         form = web.input()
         print(web.data())
-        entitys_name=''
+        entities_name=''
         name = None
         lastquery = ''
-        choosed_entitys = None
+        choosed_entities = None
+        feedbackRec = None
+        if hasattr(form,feedback):
+            feedbackRec = form.feedback
         for i in form:
             if i=='subject':
                 if sys.version_info.major==3:
                     name = urllib.parse.quote(form.subject)
                 else:
                     name = urllib.quote(form.subject)
-            elif i=='entitys':
-                choosed_entitys = web.input(entitys=[])
+            elif i=='entities':
+                choosed_entities = web.input(entities=[])
             elif i=='page':
                 print(form.page)
             elif i=='name':
@@ -77,17 +99,19 @@ class Index:
                     lastquery = urllib.parse.quote(form.name)
                 else:
                     lastquery = urllib.quote(form.name)
+        if feedbackRec is not None:
+            return newQuery(feedbackRec,web.cookies.get("ident"))
         if name is None or name=='':
             raise web.seeother('/')
         if sym=='' or (lastquery is not None and lastquery!=name):
             print("#"+lastquery)
             print("%"+name)
             raise web.seeother('/s?name='+name)
-        if choosed_entitys is not None:
-            choosed_entitys = choosed_entitys.get('entitys')
-            for entity in choosed_entitys:
-                entitys_name = entitys_name+';'+entity
-        raise web.seeother('/s?name='+name+'&entity='+entitys_name)
+        if choosed_entities is not None:
+            choosed_entities = choosed_entities.get('entities')
+            for entity in choosed_entities:
+                entities_name = entities_name+';'+entity
+        raise web.seeother('/s?name='+name+'&entity='+entities_name)
 
 #定义404错误显示内容  
 def notfound():  

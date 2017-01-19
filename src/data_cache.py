@@ -8,7 +8,7 @@ def buffered_answer(entitys,page):
     relevantText =  findRelevantText(entitys)
     return (len(relevantText)/10,relevantText[page*10:min(page*10+10,len(relevantText))])
 
-def buffered_entitys(namestr):
+def buffered_entity(namestr):
     namedEntity = get_NamedEntity(namestr)
     for i in namedEntity:
         if sys.version_info.major ==3:

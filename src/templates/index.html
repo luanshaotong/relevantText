@@ -1,17 +1,18 @@
-$def with (namestr, form_entitys, rele_text, page=1,fullpath='/')  
+$def with (namestr, form_entities, rele_text, page=1,fullpath='/')  
 
 
 		<form name = "search" method="post">
 			<textarea name="subject" rows="5" cols="80">$namestr</textarea>
 			<br/>
-			$for entitys in form_entitys
-				<input type="checkbox" name="entitys" value=$:entitys[0] $:entitys[1]>$:entitys[0]
+			$for entity in form_entities
+				<input type="checkbox" name="entities" value=$:entity[0] $:entity[1]>$:entity[0]
 			<input type="submit" value="submit"/>
 		</form>
 
 	$if rele_text is not None :  
 		<div id="context">
 		<h2> Return </h2>
+		<form name = "feedback" method="post">
 	    <table>
 		$for row in rele_text[1]:
 			<tr>
@@ -19,8 +20,12 @@ $def with (namestr, form_entitys, rele_text, page=1,fullpath='/')
 				<td> $row[1] </td>
 				<td> $row[2] </td>
 				<td> $row[3] </td>
+				<td> <input type="checkbox" name="relelinks" value=$:row[4] > $:row[4]
+				
 			</tr>
 		</table>
+		<input type="submit" value="requery" />
+		</form>
 		</div>
 		$if page>1:
 			<a href="$:(fullpath+'&page=')$:(page-1)" mce_href="page:$(page-1)">page up</a>
@@ -29,5 +34,5 @@ $def with (namestr, form_entitys, rele_text, page=1,fullpath='/')
 				<a href="$:(fullpath+'&page=')$:i" mce_href="page:$:i">$:i</a>
 			$else:
 				 $i
-		$if page<rele_text[0]:
+		$if page < rele_text[0]:
 			<a href="$:(fullpath+'&page=')$:(page+1)" mce_href="page:$(page+1)">page down</a>
