@@ -82,6 +82,7 @@ def startSearch(queryStr, times, accKey):
 	if len(metas) < 10:
 		return None, 0
 	#set data dict values
+	print('##########')
 	for i in range(N):
 		title = metas[i].find('d:Title', nsmap).text
 		description = metas[i].find('d:Description', nsmap).text
@@ -98,7 +99,7 @@ def startSearch(queryStr, times, accKey):
 		print ']'
 	for i in range(N):
 		#rel = raw_input('\nResult '+str(i+1)+' Relevant (Y/N)?')
-		data[i]['rel'] = True #if rel == 'Y' or rel == 'y' else False
+		data[i]['rel'] = False
 	#calculate precsion
 	precision = calcPrecison(data)
 	print '========================'

@@ -10,9 +10,6 @@ def buffered_answer(entitys,page):
 
 def buffered_entity(namestr):
     namedEntity = get_NamedEntity(namestr)
-    for i in namedEntity:
-        if sys.version_info.major ==3:
-            i = urllib.parse.quote(i)
-        else:
-            i = urllib.quote(i)
+    for i in range(len(namedEntity)):
+        namedEntity[i] = namedEntity[i].replace(' ','_')
     return namedEntity

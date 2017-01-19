@@ -10,29 +10,19 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 		</form>
 
 	$if rele_text is not None :  
-		<div id="context">
+		<div id="content">
 		<h2> Return </h2>
 		<form name = "feedback" method="post">
 	    <table>
-		$for row in rele_text[1]:
+		$for i in range(len(rele_text)):
 			<tr>
-				<td> $row[0] </td>
-				<td> $row[1] </td>
-				<td> $row[2] </td>
-				<td> $row[3] </td>
-				<td> <input type="checkbox" name="relelinks" value=$:row[4] > $:row[4]
+				<td> $rele_text[i]['url'] </td>
+				<td> $rele_text[i]['title'] </td>
+				<td> $rele_text[i]['description'] </td>
+				<td> <input type="checkbox" name="relelinks" value=$:i >
 				
 			</tr>
 		</table>
 		<input type="submit" value="requery" />
 		</form>
 		</div>
-		$if page>1:
-			<a href="$:(fullpath+'&page=')$:(page-1)" mce_href="page:$(page-1)">page up</a>
-		$for i in range(1,rele_text[0]+1)
-			$if page !=i:
-				<a href="$:(fullpath+'&page=')$:i" mce_href="page:$:i">$:i</a>
-			$else:
-				 $i
-		$if page < rele_text[0]:
-			<a href="$:(fullpath+'&page=')$:(page+1)" mce_href="page:$(page+1)">page down</a>
