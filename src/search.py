@@ -5,6 +5,10 @@ import web
 import sys
 from data_cache import buffered_answer
 from data_cache import buffered_entity
+from CrawlBingData import startSearch
+from CrawlBingData import adjustQuery
+from CrawlBingData import accKey
+
 #from coursera_graph import findRelevantText
 #URL映射  
 urls = (
@@ -43,13 +47,16 @@ class Index:
         #print(web.ctx.fullpath.find('page'))
         return render.index(namestr,form, rele_text,page,thisurl)  
     
+    def initQuery(self,entities_name,id=0):
+        
     def newQuery(self,rec,id):
         if id is None:
             raise web.seeother('/')
         if query_cache.has_key(id)==False:
             raise web.seeother('/')
-        data = query_cache[id]
-        
+        queryStr = adjustQuery(query_cache[id][0],query_cache[id][1])
+        data , pre = startSearch(queryStr,1,accKey)
+        return data
         
     def GET(self,sym):
         cookie_name = web.cookies.get("ident")

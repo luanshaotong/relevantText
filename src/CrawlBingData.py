@@ -97,8 +97,8 @@ def startSearch(queryStr, times, accKey):
 		print ' Summary:', description
 		print ']'
 	for i in range(N):
-		rel = raw_input('\nResult '+str(i+1)+' Relevant (Y/N)?')
-		data[i]['rel'] = True if rel == 'Y' or rel == 'y' else False
+		#rel = raw_input('\nResult '+str(i+1)+' Relevant (Y/N)?')
+		data[i]['rel'] = True #if rel == 'Y' or rel == 'y' else False
 	#calculate precsion
 	precision = calcPrecison(data)
 	print '========================'
