@@ -14,7 +14,8 @@ from commonMethods import unquote
 #from coursera_graph import findRelevantText
 #URL映射  
 urls = (
-        '/([se]?)','Index'
+        '/([s]?)','Index',
+        '/d','Download'
         )  
 app = web.application(urls, globals())  
 #模板公共变量  
@@ -25,28 +26,60 @@ t_globals = {
 #指定模板目录，并设定公共模板  
 render = web.template.render('templates', base='base', globals=t_globals) 
 
- 
+query_cache = {} 
+
+
+def checkID():
+    cookie_name = web.cookies().get("ident")
+    print(type(cookie_name))
+    if cookie_name is None:
+        web.setcookie("ident", 123 , expires=3000, domain=None, secure=False)
+        raise web.seeother('/')
+    return int(cookie_name)
+
+class Download:
+    
+    def GET(self):
+        return 'Please download file in search results page.'
+
+    def POST(self):
+        global query_cache
+        cookie_name = checkID()
+        web.header('Content-type','text/plain')  #指定返回的类型  
+        web.header('Transfer-Encoding','chunked')  
+        web.header('Content-Disposition','attachment;filename="%s"'%"a.txt")
+        data = query_cache[cookie_name]
+        file = []
+        form = web.input()
+        if hasattr(form,'relelinks'):
+            rec = form.relelinks
+            print (data)
+            print (rec)
+            for i in rec:
+                file.append(data[1][int(i)])
+            return file
 #首页类  
 class Index:  
     
-    query_cache = {} 
-    
     def refreshEntities(self,namestr,chosen_entities,ident):
+        global query_cache
         page =1
         all_entities = buffered_entity(namestr)
         if chosen_entities is not None:
-            thisurl = web.ctx.path+'?name='+namestr+'&entity='+chosen_entities
+            thisurl = web.ctx.path+'?name='+namestr+'&entity='+quote(chosen_entities)
+            print(thisurl)
             chosen_entities = unquote(chosen_entities)
             entities_name = chosen_entities.split(' ')
+            space = ' '
+            if query_cache.has_key(ident)==False:
+                 self.initQuery(space.join(entities_name),ident)
+            rele_text = query_cache[ident][1]
+            #rele_text = buffered_answer(entities_name,page)
+            print(rele_text)
         else :
-            entities_name  = all_entities
+            entities_name  = []
             thisurl = web.ctx.path+'?name='+namestr
-        space = ' '
-        if self.query_cache.has_key(ident)==False:
-             self.initQuery(space.join(entities_name),ident)
-        rele_text = self.query_cache[ident][1]
-        #rele_text = buffered_answer(entities_name,page)
-        print(rele_text)
+            rele_text = []
         form = []
         for entity in all_entities:
             if entities_name.count(entity)>0:
@@ -57,42 +90,37 @@ class Index:
         return render.index(namestr,form, rele_text,page,thisurl)
     
     def initQuery(self,entities_name,ident=0):
+        global query_cache
         if ident == 0 :
             raise web.seeother('/')
         data,pre = startSearch(entities_name,1,accKey)
         if data is None:
             data = []
-        self.query_cache[ident] = [entities_name,data]
+        query_cache[ident] = [entities_name,data]
         
         
     def newQuery(self,rec,ident):
+        global query_cache
         if ident is None:
             raise web.seeother('/')
-        if self.query_cache.has_key(ident)==False:
+        if query_cache.has_key(ident)==False:
             raise web.seeother('/')
         for i in rec:
             print rec
-            self.query_cache[ident][1][int(i)]['rec'] = True
-        queryStr = adjustQuery(self.query_cache[ident][0],self.query_cache[ident][1])
+            query_cache[ident][1][int(i)]['rec'] = True
+        queryStr = adjustQuery(query_cache[ident][0],query_cache[ident][1])
         data , pre = startSearch(queryStr,1,accKey)
         if data is None:
             data = []
-        self.query_cache[ident] = [queryStr,data]
+        query_cache[ident] = [queryStr,data]
     
     def clearQuery(self,ident):
-        if self.query_cache.has_key(ident):
-            del self.query_cache[ident]
-        
-    def checkID(self):
-        cookie_name = web.cookies().get("ident")
-        print(type(cookie_name))
-        if cookie_name is None:
-            web.setcookie("ident", 123 , expires=3000, domain=None, secure=False)
-            raise web.seeother('/')
-        return int(cookie_name)
+        global query_cache
+        if query_cache.has_key(ident):
+            del query_cache[ident]
     
     def GET(self,sym):
-        cookie_name = self.checkID()
+        cookie_name = checkID()
         print(sym)
         if (sym==''):
             return render.index('',[],None) 
@@ -113,9 +141,8 @@ class Index:
         return self.refreshEntities(namestr,chosen_entities,cookie_name)
         
     def POST(self,sym):
-        cookie_name = self.checkID()
+        cookie_name = checkID()
         form = web.input()
-        print(web.data())
         entities_name=''
         name = None
         lastquery = ''

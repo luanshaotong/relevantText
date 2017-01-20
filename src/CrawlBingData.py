@@ -8,6 +8,7 @@ import itertools
 import math
 import string
 from nltk.corpus import stopwords
+#from ExtractorSummarization import ExtractorSummarization
 
 rootURL = 'https://api.datamarket.azure.com/Bing/Search/v1/Web'
 # To be substituted
@@ -37,7 +38,7 @@ def startSearch(queryStr, times, accKey):
 	# Parse result
 	data = [{} for i in range(N)]
 	# for test only
-	tree = ET.fromstring(result.text.encode('ascii', 'ignore'))
+	tree = ET.fromstring(result.text.encode('utf-8', 'ignore'))
 	#tree = etree.fromstring(result.text)
 	# name space
 	nsmap = {
@@ -55,10 +56,12 @@ def startSearch(queryStr, times, accKey):
 		title = metas[i].find('d:Title', nsmap).text
 		description = metas[i].find('d:Description', nsmap).text
 		url = metas[i].find('d:Url', nsmap).text
+		print (title)
 		# record data
 		data[i]['url'] = url
 		data[i]['title'] = title
 		data[i]['description'] = description
+		data[i]['content'] = description#ExtractorSummarization(url)
 		print 'Result', i + 1
 		print '['
 		print ' URL:', url

@@ -2,27 +2,60 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 
 
 		<form name = "search" method="post">
-			<textarea name="subject" rows="5" cols="80">$namestr</textarea>
-			<br/>
-			$for entity in form_entities
-				<input type="checkbox" name="entities" value=$:entity[0] $:entity[1]>$:entity[0]
-			<input type="submit" value="submit"/>
+		<table>
+		<tr>
+			<td class="content">
+			<textarea name="subject" rows="5">$namestr</textarea>
+			</td>
+		</tr>
+		<tr>
+			<td class="content">
+				$if len(form_entities)>0:
+				 	We guess that you are interested in ...
+				$elif namestr!='':
+					No Entity involved.
+			</td>
+		</tr>
+		<tr>
+			<td class="content">
+			<table>
+				$if len(form_entities)>0:
+					<td class="check">
+					<div class="entities">
+					$for entity in form_entities:
+						<input type="radio" name="entities" value=$:entity[0] $:entity[1]>$:entity[0]
+					</div>
+					</td>
+				<td>
+				<button type="submit" class="button">submit</button>
+				</td>
+			</table>
+			</td>
+		</tr>
+		</table>
 		</form>
 
-	$if rele_text is not None :  
-		<div id="content">
-		<h2> Return </h2>
+	$if rele_text is not None and len(rele_text)>0 :  
+		<div class="content">
+			<h2> Result </h2>
 		<form name = "feedback" method="post">
-	    <table>
+	    <dl>
 		$for i in range(len(rele_text)):
-			<tr>
-				<td> $rele_text[i]['url'] </td>
-				<td> $rele_text[i]['title'] </td>
-				<td> $rele_text[i]['description'] </td>
-				<td> <input type="checkbox" name="relelinks" value=$:i >
-				
-			</tr>
-		</table>
-		<input type="submit" value="requery" />
+			<dt>$:rele_text[i]['title']</dt>
+			<dd>
+				<table>
+					<tr>
+						<td class="content"> $:rele_text[i]['content'] </td>
+						<td> <input type="checkbox" name="relelinks" value=$:i > </td>
+					</tr>
+					<tr> 
+						<td class="content"> <a href=$:rele_text[i]['url']> $:rele_text[i]['url'] </a></td>
+						<td> </td>
+					</tr>
+				</table>
+			</dd>
+		</dl>
+		<button type="submit" class="button">requery</button>
+		<button type="submit" class="button-d" formaction=$('d'+fullpath[2:]) formtarget="_blank">make summary</button>
 		</form>
 		</div>
