@@ -29,12 +29,15 @@ render = web.template.render('templates', base='base', globals=t_globals)
 
 query_cache = {} 
 
+count =10
+
 
 def checkID():
     cookie_name = web.cookies().get("ident")
     print(type(cookie_name))
     if cookie_name is None:
-        web.setcookie("ident", 123 , expires=3000, domain=None, secure=False)
+        web.setcookie("ident", count , expires=3000, domain=None, secure=False)
+        count = count +1
         raise web.seeother('/')
     return int(cookie_name)
 
