@@ -10,6 +10,7 @@ from CrawlBingData import adjustQuery
 from CrawlBingData import accKey
 from commonMethods import quote
 from commonMethods import unquote
+from ExtractorSummarization import ExtractorSummarization
 
 #from coursera_graph import findRelevantText
 #URL映射  
@@ -49,14 +50,17 @@ class Download:
         web.header('Transfer-Encoding','chunked')  
         web.header('Content-Disposition','attachment;filename="%s"'%"a.txt")
         data = query_cache[cookie_name]
-        file = []
+        file = ''
         form = web.input()
         if hasattr(form,'relelinks'):
-            rec = form.relelinks
-            print (data)
-            print (rec)
-            for i in rec:
-                file.append(data[1][int(i)])
+            rec = web.input(relelinks=[])
+            print (rec['relelinks'])
+            for i in rec['relelinks']:
+                try:
+                    file = file+'\n'+ExtractorSummarization(data[1][int(i)]['url'])
+                except Exception,e:
+                    print('Failed to summarize doc %s'%i)
+                    file = file+'\n'+data[1][int(i)]['content']
             return file
 #首页类  
 class Index:  
@@ -143,6 +147,7 @@ class Index:
     def POST(self,sym):
         cookie_name = checkID()
         form = web.input()
+        print ('index post')
         entities_name=''
         name = None
         lastquery = ''
@@ -150,8 +155,8 @@ class Index:
         feedbackRec = None
         for i in form:
             if i=='relelinks':
-                feedbackRec = form.relelinks
-                self.newQuery(feedbackRec,cookie_name)
+                feedbackRec = web.input(relelinks=[])
+                self.newQuery(feedbackRec['relelinks'],cookie_name)
                 raise web.seeother(web.ctx.fullpath)
             if i=='subject':
                 name = form.subject

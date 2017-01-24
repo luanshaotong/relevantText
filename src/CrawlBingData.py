@@ -8,6 +8,7 @@ import itertools
 import math
 import string
 from nltk.corpus import stopwords
+from commonMethods import quote
 #from ExtractorSummarization import ExtractorSummarization
 
 rootURL = 'https://api.datamarket.azure.com/Bing/Search/v1/Web'
@@ -33,12 +34,12 @@ def startSearch(queryStr, times, accKey):
 	print 'Round', times
 	print 'Query:', queryStr
 	print '========================'
-	uri = rootURL + "?Query=" + urllib.quote_plus("'" + queryStr + "'")
+	uri = rootURL + "?Query=" + quote("'" + queryStr + "'")
 	result = requests.get(uri, auth=(accKey, accKey))
 	# Parse result
 	data = [{} for i in range(N)]
 	# for test only
-	tree = ET.fromstring(result.text.encode('utf-8', 'ignore'))
+	tree = ET.fromstring(result.text.encode('ascii', 'ignore'))
 	#tree = etree.fromstring(result.text)
 	# name space
 	nsmap = {
@@ -123,6 +124,8 @@ def tfidfvec(query, data):
 	# normalize
 	nom = math.sqrt(sum(x**2 for x in qvec))
 	qvec = [x / nom for x in qvec]
+	print(word_set)
+	print(tfidf)
 	return qvec, tfidf, word_set
 
 # Generate new query words
