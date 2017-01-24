@@ -33,6 +33,7 @@ count =10
 
 
 def checkID():
+    global count
     cookie_name = web.cookies().get("ident")
     print(type(cookie_name))
     if cookie_name is None:
