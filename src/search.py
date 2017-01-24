@@ -46,21 +46,24 @@ class Download:
     def POST(self):
         global query_cache
         cookie_name = checkID()
-        web.header('Content-type','text/plain')  #指定返回的类型  
-        web.header('Transfer-Encoding','chunked')  
-        web.header('Content-Disposition','attachment;filename="%s"'%"a.txt")
         data = query_cache[cookie_name]
         file = ''
         form = web.input()
         if hasattr(form,'relelinks'):
             rec = web.input(relelinks=[])
+            web.header('Content-type','text/plain')  #指定返回的类型  
+            web.header('Transfer-Encoding','chunked')
+            web.header('Content-Disposition','attachment;filename="summary of%s.txt"'%form.entity)
             print (rec['relelinks'])
             for i in rec['relelinks']:
                 try:
-                    file = file+'\n'+ExtractorSummarization(data[1][int(i)]['url'])
+                    temp = ExtractorSummarization(data[1][int(i)]['url'])
+                    if len(temp)<10:
+                        raise 1
+                    file = file+'\r\n'+temp+'\r\n'
                 except Exception,e:
                     print('Failed to summarize doc %s'%i)
-                    file = file+'\n'+data[1][int(i)]['content']
+                    file = file+'\r\n'+data[1][int(i)]['content']+'\r\n'
             return file
 #首页类  
 class Index:  

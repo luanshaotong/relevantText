@@ -12,5 +12,7 @@ def ExtractorSummarization(prf_url):
     #print article.title
     #print article.meta_description
     cleaned_text=article.cleaned_text[:]
-    #print cleaned_text
-    return summarize(cleaned_text.encode('ascii','ignore').decode('ascii'))
+    nl = cleaned_text.find('\n')
+    #print nl
+    fp = cleaned_text[0:nl]
+    return fp
