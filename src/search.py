@@ -53,7 +53,7 @@ class Download:
             rec = web.input(relelinks=[])
             web.header('Content-type','text/plain')  #指定返回的类型  
             web.header('Transfer-Encoding','chunked')
-            web.header('Content-Disposition','attachment;filename="summary of%s.txt"'%form.entity)
+            web.header('Content-Disposition','attachment;filename="summary of%s.txt"'%data[0])
             print (rec['relelinks'])
             for i in rec['relelinks']:
                 try:
