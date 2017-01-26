@@ -195,6 +195,7 @@ class Index:
             raise web.seeother('/')
         if sym=='' or (lastquery is not None and lastquery!=name):
             raise web.seeother('/s?name='+quote(name))
+        
         raise web.seeother('/s?name='+quote(name)+'&entity='+quote(chosen_entities))
 
 #定义404错误显示内容  
