@@ -56,7 +56,32 @@ def checkID():
 class Download:
     
     def GET(self):
-        return 'Please download file in search results page.'
+        cookie_name = checkID()
+        file = ''
+        form = web.input()
+        rec = web.input(relelinks=[])
+        try:
+            data = getQueryData(cookie_name)
+        except TypeError,t:
+            return 'Your cookie is out of date.'
+        web.header('Content-type','text/plain')  #指定返回的类型  
+        web.header('Transfer-Encoding','chunked')
+        web.header('Content-Disposition','attachment;filename=\
+                "summary of%s.txt"'%getQueryString(cookie_name))
+        #print (rec['relelinks'])
+        for i in data:
+            if i['rel']==True:
+                try:
+                    temp = ExtractorSummarization(i['url'])
+                    if len(temp)<10:
+                        raise 1
+                    file = file+'\r\n'+temp+'\r\n'
+                except Exception,e:
+                    print('Failed to summarize doc %s'%i['url'])
+                    file = file+'\r\n'+i['description']+'\r\n'
+        sio = StringIO.StringIO()
+        sio.write(file)
+        return sio.getvalue()
 
     def POST(self):
         cookie_name = checkID()
@@ -68,23 +93,11 @@ class Download:
                 data = getQueryData(cookie_name)
             except TypeError,t:
                 return 'Your cookie is out of date.'
-            web.header('Content-type','text/plain')  #指定返回的类型  
-            web.header('Transfer-Encoding','chunked')
-            web.header('Content-Disposition','attachment;filename=\
-                    "summary of%s.txt"'%getQueryString(cookie_name))
-            print (rec['relelinks'])
             for i in rec['relelinks']:
-                try:
-                    temp = ExtractorSummarization(data[int(i)]['url'])
-                    if len(temp)<10:
-                        raise 1
-                    file = file+'\r\n'+temp+'\r\n'
-                except Exception,e:
-                    print('Failed to summarize doc %s'%i)
-                    file = file+'\r\n'+data[int(i)]['description']+'\r\n'
-            sio = StringIO.StringIO()
-            sio.write(file)
-            return sio.getvalue()
+                data[int(i)]['rel']=True
+            setQueryData(cookie_name,data)
+            raise web.seeother(web.ctx.fullpath)
+        raise web.seeother('/')
 #首页类  
 class Index:  
     
@@ -134,7 +147,7 @@ class Index:
             raise web.seeother('/')
         for i in rec:
             print rec
-            predata[int(i)]['rec'] = True
+            predata[int(i)]['rel'] = True
         queryStr = adjustQuery(prestr,predata)
         data , pre = startSearch(queryStr,1,accKey)
         if data is None:
