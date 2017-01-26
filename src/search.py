@@ -57,6 +57,10 @@ class Download:
     
     def GET(self):
         cookie_name = checkID()
+        print('get:')
+        print(cookie_name)
+        print('\n')
+        print(getQueryData(cookie_name))
         file = ''
         form = web.input()
         rec = web.input(relelinks=[])
@@ -85,6 +89,10 @@ class Download:
 
     def POST(self):
         cookie_name = checkID()
+        print('post:')
+        print(cookie_name)
+        print('\n')
+        print(getQueryData(cookie_name))
         file = ''
         form = web.input()
         if hasattr(form,'relelinks'):
@@ -93,6 +101,8 @@ class Download:
                 data = getQueryData(cookie_name)
             except TypeError,t:
                 return 'Your cookie is out of date.'
+            for d in data:
+                d['rel']=False
             for i in rec['relelinks']:
                 data[int(i)]['rel']=True
             setQueryData(cookie_name,data)
