@@ -87,6 +87,7 @@ def adjustQuery(queryStr, data):
 
 #Calculate tfidf scores
 def tfidfvec(query, data):
+	print(query)
 	# extract docs form raw data
 	docs = [item['description'] for item in data]
 	# build a list of tokenized docs
@@ -119,6 +120,7 @@ def tfidfvec(query, data):
 
 	# now let's work on the query vector
 	qwords = [word.lower() for word in query.split()]
+	print(qwords)
 	# tf vector
 	qvec = [qwords.count(w) for w in word_set]
 	# normalize

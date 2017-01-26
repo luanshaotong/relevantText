@@ -72,7 +72,7 @@ class Download:
         web.header('Content-type','text/plain')  #指定返回的类型  
         web.header('Transfer-Encoding','chunked')
         web.header('Content-Disposition','attachment;filename=\
-                "summary of%s.txt"'%getQueryString(cookie_name))
+                "summary of %s.txt"'%getQueryString(cookie_name))
         #print (rec['relelinks'])
         for i in data:
             if i['rel']==True:
@@ -121,7 +121,7 @@ class Index:
             chosen_entities = unquote(chosen_entities)
             entities_name = chosen_entities.split(' ')
             space = ' '
-            self.initQuery(space.join(entities_name),ident)
+            self.initQuery(space.join(entities_name).replace('_',' '),ident)
             rele_text = getQueryData(ident)
             #rele_text = buffered_answer(entities_name,page)
             #print(rele_text)

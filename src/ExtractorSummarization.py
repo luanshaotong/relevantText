@@ -16,3 +16,6 @@ def ExtractorSummarization(prf_url):
     #print nl
     fp = cleaned_text[0:nl]
     return fp
+
+
+#config = Configuration()
