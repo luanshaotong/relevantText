@@ -71,13 +71,13 @@ class Download:
             print (rec['relelinks'])
             for i in rec['relelinks']:
                 try:
-                    temp = ExtractorSummarization(data[1][int(i)]['url'])
+                    temp = ExtractorSummarization(data[int(i)]['url'])
                     if len(temp)<10:
                         raise 1
                     file = file+'\r\n'+temp+'\r\n'
                 except Exception,e:
                     print('Failed to summarize doc %s'%i)
-                    file = file+'\r\n'+data[1][int(i)]['description']+'\r\n'
+                    file = file+'\r\n'+data[int(i)]['description']+'\r\n'
             return file
 #首页类  
 class Index:  
