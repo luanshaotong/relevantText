@@ -116,14 +116,14 @@ class Index:
         all_entities = buffered_entity(namestr)
         if chosen_entities is not None:
             thisurl = web.ctx.path+'?name='+namestr+'&entity='+quote(chosen_entities)
-            print(thisurl)
+            #print(thisurl)
             chosen_entities = unquote(chosen_entities)
             entities_name = chosen_entities.split(' ')
             space = ' '
             self.initQuery(space.join(entities_name),ident)
             rele_text = getQueryData(ident)
             #rele_text = buffered_answer(entities_name,page)
-            print(rele_text)
+            #print(rele_text)
         else :
             entities_name  = []
             thisurl = web.ctx.path+'?name='+namestr
@@ -156,7 +156,7 @@ class Index:
         except TypeError,t:
             raise web.seeother('/')
         for i in rec:
-            print rec
+            #print rec
             predata[int(i)]['rel'] = True
         queryStr = adjustQuery(prestr,predata)
         data , pre = startSearch(queryStr,1,accKey)
@@ -172,7 +172,7 @@ class Index:
     
     def GET(self,sym):
         cookie_name = checkID()
-        print(sym)
+        #print(sym)
         if (sym==''):
             return render.index('',[],None) 
         form  = web.input()
@@ -194,7 +194,7 @@ class Index:
     def POST(self,sym):
         cookie_name = checkID()
         form = web.input()
-        print ('index post')
+        #print ('index post')
         entities_name=''
         name = None
         lastquery = ''
@@ -209,8 +209,6 @@ class Index:
                 name = form.subject
             elif i=='entities':
                 chosen_entities = form.entities
-            elif i=='page':
-                print(form.page)
             elif i=='name':
                 lastquery = form.name
         #self.clearQuery(cookie_name)
