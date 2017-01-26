@@ -57,7 +57,7 @@ def startSearch(queryStr, times, accKey):
 		title = metas[i].find('d:Title', nsmap).text
 		description = metas[i].find('d:Description', nsmap).text
 		url = metas[i].find('d:Url', nsmap).text
-		print (title)
+		#print (title)
 		# record data
 		data[i]['url'] = url
 		data[i]['title'] = title

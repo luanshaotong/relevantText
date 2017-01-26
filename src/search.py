@@ -64,11 +64,14 @@ class Download:
         form = web.input()
         if hasattr(form,'relelinks'):
             rec = web.input(relelinks=[])
+            try:
+                data = getQueryData(cookie_name)
+            except TypeError,t:
+                return 'Your cookie is out of date.'
             web.header('Content-type','text/plain')  #指定返回的类型  
             web.header('Transfer-Encoding','chunked')
             web.header('Content-Disposition','attachment;filename=\
                     "summary of%s.txt"'%getQueryString(cookie_name))
-            data = getQueryData(cookie_name)
             print (rec['relelinks'])
             for i in rec['relelinks']:
                 try:
@@ -94,11 +97,8 @@ class Index:
             chosen_entities = unquote(chosen_entities)
             entities_name = chosen_entities.split(' ')
             space = ' '
-            try:
-                rele_text = getQueryData(ident)
-            except TypeError,t:
-                self.initQuery(space.join(entities_name),ident)
-                rele_text = getQueryData(ident)
+            self.initQuery(space.join(entities_name),ident)
+            rele_text = getQueryData(ident)
             #rele_text = buffered_answer(entities_name,page)
             print(rele_text)
         else :
@@ -175,7 +175,7 @@ class Index:
         entities_name=''
         name = None
         lastquery = ''
-        chosen_entities = None
+        chosen_entities = ''
         feedbackRec = None
         for i in form:
             if i=='relelinks':
@@ -185,7 +185,7 @@ class Index:
             if i=='subject':
                 name = form.subject
             elif i=='entities':
-                chosen_entities = web.input(entities=[])
+                chosen_entities = form.entities
             elif i=='page':
                 print(form.page)
             elif i=='name':
@@ -195,11 +195,7 @@ class Index:
             raise web.seeother('/')
         if sym=='' or (lastquery is not None and lastquery!=name):
             raise web.seeother('/s?name='+quote(name))
-        if chosen_entities is not None:
-            chosen_entities = chosen_entities.get('entities')
-            for entity in chosen_entities:
-                entities_name = entities_name+' '+entity
-        raise web.seeother('/s?name='+quote(name)+'&entity='+quote(entities_name))
+        raise web.seeother('/s?name='+quote(name)+'&entity='+quote(chosen_entities))
 
 #定义404错误显示内容  
 def notfound():  
