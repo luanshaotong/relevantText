@@ -121,8 +121,10 @@ class Index:
             chosen_entities = unquote(chosen_entities)
             entities_name = chosen_entities.split(' ')
             space = ' '
-            self.initQuery(space.join(entities_name).replace('_',' '),ident)
-            rele_text = getQueryData(ident)
+            try:
+                rele_text = getQueryData(ident)
+            except TypeError,t:
+                raise web.seeother('/')
             #rele_text = buffered_answer(entities_name,page)
             #print(rele_text)
         else :
@@ -210,6 +212,7 @@ class Index:
                 name = form.subject
             elif i=='entities':
                 chosen_entities = form.entities
+                self.initQuery(chosen_entities.replace('_',' '),cookie_name)
             elif i=='name':
                 lastquery = form.name
         #self.clearQuery(cookie_name)
@@ -217,7 +220,6 @@ class Index:
             raise web.seeother('/')
         if sym=='' or (lastquery is not None and lastquery!=name):
             raise web.seeother('/s?name='+quote(name))
-        
         raise web.seeother('/s?name='+quote(name)+'&entity='+quote(chosen_entities))
 
 #定义404错误显示内容  
