@@ -18,6 +18,7 @@ from queryData import getQueryString
 from queryData import setQueryString
 from queryData import getCounter
 from queryData import incCounter
+from queryData import getKey
 
 
 #from coursera_graph import findRelevantText
@@ -60,7 +61,7 @@ class Download:
         print('get:')
         print(cookie_name)
         print('\n')
-        print(getQueryData(cookie_name))
+        print(getKey())
         file = ''
         form = web.input()
         rec = web.input(relelinks=[])
@@ -92,7 +93,7 @@ class Download:
         print('post:')
         print(cookie_name)
         print('\n')
-        print(getQueryData(cookie_name))
+        print(getKey())
         file = ''
         form = web.input()
         if hasattr(form,'relelinks'):

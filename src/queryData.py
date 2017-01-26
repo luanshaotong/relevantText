@@ -33,6 +33,9 @@ def setQueryData(ident,data):
 def setQueryString(ident,namestr):
     querystring[str(ident)]=namestr
     
+def getKey():
+    return querycache.keys()
+    
 
 try:
     getCounter()
