@@ -62,21 +62,21 @@ def startSearch(queryStr, times, accKey):
 		data[i]['url'] = url
 		data[i]['title'] = title
 		data[i]['description'] = description
-		data[i]['content'] = description#ExtractorSummarization(url)
-		print 'Result', i + 1
-		print '['
-		print ' URL:', url
-		print ' Ttile:', title
-		print ' Summary:', description
-		print ']'
+		#data[i]['content'] = description#ExtractorSummarization(url)
+		#print 'Result', i + 1
+		#print '['
+		#print ' URL:', url
+		#print ' Ttile:', title
+		#print ' Summary:', description
+		#print ']'
 	for i in range(N):
 		data[i]['rel'] = False
 	#calculate precsion
 	precision = calcPrecison(data)
-	print '========================'
-	print 'Feedback Summary'
-	print 'Query:', queryStr
-	print 'Precision:', precision
+	#print '========================'
+	#print 'Feedback Summary'
+	#print 'Query:', queryStr
+	#print 'Precision:', precision
 	return data, precision
 
 # Adjust query - key part
@@ -124,8 +124,8 @@ def tfidfvec(query, data):
 	# normalize
 	nom = math.sqrt(sum(x**2 for x in qvec))
 	qvec = [x / nom for x in qvec]
-	print(word_set)
-	print(tfidf)
+	#print(word_set)
+	#print(tfidf)
 	return qvec, tfidf, word_set
 
 # Generate new query words

@@ -45,7 +45,7 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 			<dd>
 				<table>
 					<tr>
-						<td class="content"> $:rele_text[i]['content'] </td>
+						<td class="content"> $:rele_text[i]['description'] </td>
 						<td> <input type="checkbox" name="relelinks" value=$:i > </td>
 					</tr>
 					<tr> 
@@ -56,6 +56,6 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 			</dd>
 		</dl>
 		<button type="submit" class="button">requery</button>
-		<button type="submit" class="button-d" formaction=$('d'+fullpath[2:]) formtarget="_blank">make summary</button>
+		<button type="submit" class="button-d" formaction=$('d'+fullpath[2:]) formtarget="_blank">summarize</button>
 		</form>
 		</div>
