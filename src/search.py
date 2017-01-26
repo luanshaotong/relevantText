@@ -3,6 +3,7 @@
 import urllib 
 import web
 import sys
+import StringIO
 from data_cache import buffered_answer
 from data_cache import buffered_entity
 from CrawlBingData import startSearch
@@ -78,7 +79,9 @@ class Download:
                 except Exception,e:
                     print('Failed to summarize doc %s'%i)
                     file = file+'\r\n'+data[int(i)]['description']+'\r\n'
-            return file
+            sio = StringIO.StringIO()
+            sio.write(file)
+            return sio.getvalue()
 #首页类  
 class Index:  
     
