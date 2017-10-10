@@ -15,7 +15,7 @@ rootURL = 'https://api.datamarket.azure.com/Bing/Search/v1/Web'
 # To be substituted
 accKey = 'gQ+gama5GAfLoQmix8AKEn5Nop24Tlu34tRapNPOImI'
 # top N documents we should do calculation on
-N = 10
+N = 9
 # rocchio parameters
 alpha = 2.0
 beta = 0.75

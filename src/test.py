@@ -6,7 +6,6 @@ Created on 2017��1��18��
 '''
 import requests
 
-from gensim import models
 
 from gensim import corpora
 
@@ -29,9 +28,9 @@ splashurl = 'http://localhost:8050/render.html'
 
 topN = 5
     
-def startQuery(queryStr):
+def startSearch(queryStr):
     
-    body = requests.get(splashurl+'?url='+xsurl+query)
+    body = requests.get(splashurl+'?url='+xsurl+queryStr)
     
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
@@ -48,8 +47,8 @@ def startQuery(queryStr):
         ct += 1
         piece = {}
         piece['url'] = tagA.h3.a.get('href').encode('ascii')
-        piece['title'] = ''.join(tagA.h3.a.stripped_strings).encode('ascii','ignore')
-        piece['description'] = tagA.find(class_='c_abstract').stripped_strings.next().encode('ascii','ignore')
+        piece['title'] = ' '.join(tagA.h3.a.stripped_strings).encode('ascii','ignore')
+        piece['description'] = ' '.join(tagA.find(class_='c_abstract').stripped_strings).split(u'来')[0].encode('ascii','ignore')
         piece['rel'] = False
         data.append(piece)
         print piece
