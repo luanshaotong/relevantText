@@ -3,7 +3,7 @@
 try:
     from nltk import ne_chunk, pos_tag, word_tokenize
     from nltk.tree import Tree
-    #raise 1
+    raise 1
 except Exception,e :
     count = 1
 else:
