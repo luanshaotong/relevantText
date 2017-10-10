@@ -12,8 +12,6 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 			<td class="content">
 				$if len(form_entities)>0:
 				 	We guess that you are interested in ...
-				$elif namestr!='':
-					No Entity involved.
 			</td>
 		</tr>
 		<tr>
@@ -41,21 +39,20 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 		<form name = "feedback" method="post">
 	    <dl>
 		$for i in range(len(rele_text)):
-			<dt>$:rele_text[i]['title']</dt>
 			<dd>
 				<table>
 					<tr>
-						<td class="content"> $:rele_text[i]['description'] </td>
+					
 						<td> <input type="checkbox" name="relelinks" value=$:i > </td>
+						<td class="title">  <a href=$:rele_text[i]['url']> $:rele_text[i]['title']</a></td>
 					</tr>
 					<tr> 
-						<td class="content"> <a href=$:rele_text[i]['url']> $:rele_text[i]['url'] </a></td>
 						<td> </td>
+						<td class="content"> $:rele_text[i]['description'] </td>
 					</tr>
 				</table>
 			</dd>
 		</dl>
 		<button type="submit" class="button">requery</button>
-		<button type="submit" class="button-d" formaction=$('d'+fullpath[2:]) formtarget="_blank">summarize</button>
 		</form>
 		</div>

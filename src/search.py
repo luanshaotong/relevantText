@@ -6,7 +6,7 @@ import sys
 import StringIO
 from data_cache import buffered_answer
 from data_cache import buffered_entity
-from CrawlBingData import startSearch
+from test import startSearch
 from CrawlBingData import adjustQuery
 from CrawlBingData import accKey
 from commonMethods import quote
@@ -114,7 +114,6 @@ class Index:
     
     def refreshEntities(self,namestr,chosen_entities,ident):
         page =1
-        all_entities = buffered_entity(namestr)
         if chosen_entities is not None:
             thisurl = web.ctx.path+'?name='+namestr+'&entity='+quote(chosen_entities)
             #print(thisurl)
@@ -130,24 +129,22 @@ class Index:
         else :
             entities_name  = []
             thisurl = web.ctx.path+'?name='+namestr
-            rele_text = []
+            try:
+                rele_text = getQueryData(ident)
+            except TypeError,t:
+                raise web.seeother('/')
         form = []
-        for entity in all_entities:
-            if entities_name.count(entity)>0:
-                form.append((entity,'checked ="true"'))
-            else :
-                form.append((entity,''))
         #print(web.ctx.fullpath.find('page'))
         return render.index(namestr,form, rele_text,page,thisurl)
     
-    def initQuery(self,entities_name,ident=0):
+    def initQuery(self,querystr,ident=0):
         if ident == 0 :
             raise web.seeother('/')
-        data,pre = startSearch(entities_name,1,accKey)
+        data = startSearch(querystr)
         if data is None:
             data = []
         setQueryData(ident,data)
-        setQueryString(ident,entities_name)
+        setQueryString(ident,querystr)
         
         
     def newQuery(self,rec,ident):
@@ -162,7 +159,8 @@ class Index:
             #print rec
             predata[int(i)]['rel'] = True
         queryStr = adjustQuery(prestr,predata)
-        data , pre = startSearch(queryStr,1,accKey)
+        print 'new query: ' + queryStr
+        data = startSearch(queryStr)
         if data is None:
             data = []
         setQueryData(ident,data)
@@ -186,13 +184,11 @@ class Index:
         for i in form:
             if i=='name' :
                 namestr = form.name
-            elif i=='entity':
-                chosen_entities = form.entity
             elif i=='page':
                 page = int(form.page)
         if namestr is None:
             raise web.seeother('/')
-        return self.refreshEntities(namestr,chosen_entities,cookie_name)
+        return self.refreshEntities(namestr,None,cookie_name)
         
     def POST(self,sym):
         cookie_name = checkID()
@@ -204,23 +200,22 @@ class Index:
         chosen_entities = ''
         feedbackRec = None
         for i in form:
+            #收到相关反馈信息
             if i=='relelinks':
                 feedbackRec = web.input(relelinks=[])
                 self.newQuery(feedbackRec['relelinks'],cookie_name)
                 raise web.seeother(web.ctx.fullpath)
+            #收到新的查询内容
             if i=='subject':
                 name = form.subject
-            elif i=='entities':
-                chosen_entities = form.entities
-                self.initQuery(chosen_entities.replace('_',' '),cookie_name)
+            #地址栏中的查询内容
             elif i=='name':
                 lastquery = form.name
         #self.clearQuery(cookie_name)
         if name is None or name=='':
             raise web.seeother('/')
-        if sym=='' or (lastquery is not None and lastquery!=name):
-            raise web.seeother('/s?name='+quote(name))
-        raise web.seeother('/s?name='+quote(name)+'&entity='+quote(chosen_entities))
+        self.initQuery(name,cookie_name)
+        raise web.seeother('/s?name='+quote(name))
 
 #定义404错误显示内容  
 def notfound():  
