@@ -49,5 +49,5 @@ if count ==0:
 else :
     def get_NamedEntity(namestr):
         entities_return = [u"Hong Kong",u"England"]
-        return entities_return
+        return [namestr]
 

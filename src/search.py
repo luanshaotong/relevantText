@@ -11,7 +11,7 @@ from CrawlBingData import adjustQuery
 from CrawlBingData import accKey
 from commonMethods import quote
 from commonMethods import unquote
-#from ExtractorSummarization import ExtractorSummarization
+from ExtractorSummarization import ExtractorSummarization
 from queryData import getQueryData
 from queryData import setQueryData
 from queryData import getQueryString

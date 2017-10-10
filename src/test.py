@@ -8,13 +8,15 @@ import requests
 
 from gensim import models
 
+from gensim import corpora
+
 from bs4 import BeautifulSoup
 
 import sys
 
 from feedbackprocess import updatequery
+from lxml.html._diffcommand import description
 
-sys.setdefaultencoding='utf-8'
  
 query = 'hello'
 
@@ -24,6 +26,8 @@ scurl = 'https://scholar.google.com/scholar?hl=zh-CN&as_sdt=0%2C5&q=hello&btnG='
 
 splashurl = 'http://localhost:8050/render.html'
 
+
+topN = 5
     
 def startQuery(queryStr):
     
@@ -52,11 +56,20 @@ def startQuery(queryStr):
     
     return data
 
-def adjustQuery():
+def adjustQuery(queryStr,data):
     
-    updatequery(model,queryStr, reltexts, irreltexts,topN,dictionary)
+    model = models.LsiModel.load('trainlsiciteulikemodel',mmap='r')
+    dictionary = corpora.Dictionary.load('trainciteulikedict')
+    reltexts = []
+    irreltexts = []
+    for piece in data :
+        if piece['rel']:
+            reltexts.append(piece['description'])
+        else :
+            irreltexts.append(piece['description'])
+    return updatequery(model,queryStr, reltexts, irreltexts,topN,dictionary)
 
-file = open('test.txt','w')
 
-startQuery('hello')
+#startQuery('hello')
 
+adjustQuery('hello', [])
