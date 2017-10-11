@@ -1,0 +1,9 @@
+*.db
+*.pyc
+*.txt
+*.bak
+counter
+.project
+.pydevproject*
+.settings/*
+src/*.npy
