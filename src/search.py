@@ -7,11 +7,11 @@ import StringIO
 from data_cache import buffered_answer
 from data_cache import buffered_entity
 from test import startSearch
-from CrawlBingData import adjustQuery
+from test import adjustQuery
 from CrawlBingData import accKey
 from commonMethods import quote
 from commonMethods import unquote
-from ExtractorSummarization import ExtractorSummarization
+#from ExtractorSummarization import ExtractorSummarization
 from queryData import getQueryData
 from queryData import setQueryData
 from queryData import getQueryString

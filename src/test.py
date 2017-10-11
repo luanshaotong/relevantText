@@ -9,12 +9,14 @@ import requests
 
 from gensim import corpora
 
+from gensim import models
+
 from bs4 import BeautifulSoup
 
 import sys
 
 from feedbackprocess import updatequery
-from lxml.html._diffcommand import description
+#from lxml.html._diffcommand import description
 
  
 query = 'hello'
