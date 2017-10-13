@@ -6,6 +6,8 @@ Created on 2017��1��18��
 '''
 import requests
 
+import sys
+
 count = 0
 try:
     from gensim import corpora
@@ -17,12 +19,12 @@ try:
     from feedbackprocess import preprocess
     
 except Exception,e :
+    traceback.print_exc(file=sys.stdout)
     count = 1
 
 
 from bs4 import BeautifulSoup
 
-import sys
 
 #from lxml.html._diffcommand import description
 
