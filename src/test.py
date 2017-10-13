@@ -61,7 +61,7 @@ def getData_baidu(soup):
     print 'lllll\n'
     
     for tagA in contents :
-        print '\n##index' + str(ct)
+        #print '\n##index' + str(ct)
         ct += 1
         piece = {}
         piece['url'] = 'http://xueshu.baidu.com' +tagA.h3.a.get('href').encode('ascii')
@@ -69,7 +69,7 @@ def getData_baidu(soup):
         piece['description'] = ' '.join(tagA.find(class_='c_abstract').stripped_strings).split(u'来')[0].encode('ascii','ignore')
         piece['rel'] = False
         data.append(piece)
-        print piece
+        #print piece
     
     return data
 
@@ -84,7 +84,7 @@ def getData_google(soup):
     print 'lllll\n'
     
     for tagA in contents :
-        print '\n##index' + str(ct)
+        #print '\n##index' + str(ct)
         ct += 1
         piece = {}
         piece['url'] = tagA.find(class_='gs_rt').a.get('href').encode('ascii')
@@ -92,7 +92,7 @@ def getData_google(soup):
         piece['description'] = ' '.join(tagA.find(class_='gs_rs').stripped_strings).encode('ascii','ignore')
         piece['rel'] = False
         data.append(piece)
-        print piece
+        #print piece
     
     return data
     

@@ -49,7 +49,7 @@ render = web.template.render('templates', base='base', globals=t_globals)
 def checkID():
     global count
     cookie_name = web.cookies().get("team-id")
-    print (cookie_name)
+    #print (cookie_name)
     if cookie_name is None or int(cookie_name) <= 1024:
         web.setcookie("team-id", getCounter() , expires=3000, domain=None, secure=False)
         incCounter()
@@ -168,7 +168,7 @@ class Index:
             if i not in prerank or predata[i]['rel'] == True :
                 data.append(predata[i])
         rank = adjustQuery(prestr,data,irdocs)
-        print rank
+        #print rank
         for ttx in data:
             ttx['rel'] = False
         setQueryData(ident,data)
