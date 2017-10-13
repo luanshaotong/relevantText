@@ -173,7 +173,7 @@ class Index:
             ttx['rel'] = False
         setQueryData(ident,data)
         #setQueryString(ident,queryStr)
-        setQueryRank(ident,rank)
+        setQueryRank(ident,rank[0:max(5,len(rank))])
     
     def clearQuery(self,ident):
         global query_cache

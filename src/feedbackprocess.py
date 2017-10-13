@@ -61,7 +61,7 @@ def lsiupdatequery(model,qtopics, reltexts, irreltexts,topN,dictionary):
 
     # qtoptopicsid = findtopNtopics(qtopics, topN)
     qtoptopicsid =findtopNtopics(model, qtopics, topN, dictionary)
-    print 'lsiupdatequery qtoptopicsid ',qtoptopicsid
+    #print 'lsiupdatequery qtoptopicsid ',qtoptopicsid
     rel_count = len(reltexts)
     irr_count = len(irreltexts)
     new_qvec = [(tid, alpha * x) for (tid, x) in qtopics]
@@ -69,20 +69,20 @@ def lsiupdatequery(model,qtopics, reltexts, irreltexts,topN,dictionary):
         reltext=preprocess(reltext)
         reltext2bow = dictionary.doc2bow(reltext)
         reltopics = model[reltext2bow]
-        print 'lsiupdatequery reltopics ',reltopics
+        #print 'lsiupdatequery reltopics ',reltopics
         new_qvec = [(q[0],q[1] + beta / float(rel_count) * r[1]) for q, r in zip(new_qvec, reltopics)]
     for idx,irreltext in enumerate(irreltexts):
         irreltext = preprocess(irreltext)
         irreltext2bow = dictionary.doc2bow(irreltext)
         irreltopics = model[irreltext2bow]
-        print 'lsiupdatequery irreltopics ', irreltopics
+        #print 'lsiupdatequery irreltopics ', irreltopics
         # irreltoptopicsid = findtopNtopics(irreltopics, topN)
         irreltoptopicsid = findtopNtopics(model, irreltopics, topN, dictionary)
-        print 'lsiupdatequery irreltoptopicsid ', irreltoptopicsid
+        #print 'lsiupdatequery irreltoptopicsid ', irreltoptopicsid
         diffirreltopicsid = set(irreltoptopicsid).difference(set(qtoptopicsid))
-        print 'lsiupdatequery diffirreltopicsid ', diffirreltopicsid
+        #print 'lsiupdatequery diffirreltopicsid ', diffirreltopicsid
         irreltopics = [(id, p) if id in diffirreltopicsid else (id, 0) for (id, p) in irreltopics]
-        print idx, 'lsiupdatequery irreltopics ', irreltopics
+        #print idx, 'lsiupdatequery irreltopics ', irreltopics
         new_qvec = [(q[0],q[1] - gamma / float(irr_count) * r[1]) for q, r in zip(new_qvec, irreltopics)]
     zipped=zip(*new_qvec)
     probs=map(abs,zipped[1])
