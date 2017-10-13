@@ -90,13 +90,21 @@ def getData_google(soup):
     
 def startSearch(queryStr):
     
-    body = requests.get(splashurl+'?url='+scurl+queryStr)
-    
-    print body.text
+    body = requests.get(splashurl+'?url='+xsurl+queryStr)
     
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
-    return getData_google(soup)
+    data = getData_baidu(soup)
+
+    body = requests.get(splashurl+'?url='+xsurl+queryStr +'&pn=20' )
+    
+    soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
+    
+    for i in getData_baidu(soup):
+        data.append(i)
+    
+    return data
+    
 
 
 if count ==0 :
@@ -126,6 +134,7 @@ else :
     def adjustQuery(queryStr,docs,data):
         return [3,5]
 
-#startQuery('hello')
+
+startSearch('hello')
 
 #adjustQuery('hello', [])
