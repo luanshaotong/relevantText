@@ -84,14 +84,14 @@ if count ==0 :
                 irreltexts.append(piece['title']+piece['description'])
         for piece in data:
             docs.append(piece['title']+piece['description'])
-        adjustrank(model,dictionary,qtopics,docs,topN,reltexts,irreltexts)
+        
         
         
         query = preprocess(queryStr)
         query2bow=dictionary.doc2bow(query)
         qtopics = topicmodel[query2bow]
         
-        return updatequery(model,queryStr, reltexts, irreltexts,topN,dictionary)[0:5]
+        return adjustrank(model,dictionary,qtopics,docs,topN,reltexts,irreltexts)[0:5]
 else :
     def adjustQuery(queryStr,docs,data):
         return [3,5]
