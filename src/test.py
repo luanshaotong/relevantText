@@ -89,7 +89,7 @@ if count ==0 :
         
         query = preprocess(queryStr)
         query2bow=dictionary.doc2bow(query)
-        qtopics = topicmodel[query2bow]
+        qtopics = model[query2bow]
         
         return adjustrank(model,dictionary,qtopics,docs,topN,reltexts,irreltexts)[0:5]
 else :
