@@ -92,6 +92,8 @@ def startSearch(queryStr):
     
     body = requests.get(splashurl+'?url='+scurl+queryStr)
     
+    print body.text
+    
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
     return getData_google(soup)
