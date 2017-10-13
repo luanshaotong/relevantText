@@ -11,6 +11,8 @@ querystring = bsddb.btopen('querystring.db', 'c')
 
 querycache = bsddb.btopen('cache.db','c')
 
+queryrank = bsddb.btopen('ranks.db','c')
+
 #help(bsddb)
 
 cookiecounter = bsddb.rnopen('counter.db','c')
@@ -27,11 +29,17 @@ def getQueryData(ident):
 def getQueryString(ident):
     return querystring.get(str(ident))
 
+def getQueryRank(ident):
+    return eval(queryrank.get(str(ident)))
+
 def setQueryData(ident,data):
     querycache[str(ident)]=str(data)
 
 def setQueryString(ident,namestr):
     querystring[str(ident)]=namestr
+    
+def setQueryRank(ident,rank):
+    queryrank[str(ident)]=str(rank)
     
 def getKey():
     return querycache.keys()

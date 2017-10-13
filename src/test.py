@@ -6,16 +6,24 @@ Created on 2017��1��18��
 '''
 import requests
 
+count = 0
+try:
+    from gensim import corpora
+    
+    from gensim import models
+    
+    from feedbackprocess import adjustrank
+    
+    from feedbackprocess import preprocess
+    
+except Exception,e :
+    count = 1
 
-from gensim import corpora
-
-from gensim import models
 
 from bs4 import BeautifulSoup
 
 import sys
 
-from feedbackprocess import updatequery
 #from lxml.html._diffcommand import description
 
  
@@ -57,20 +65,33 @@ def startSearch(queryStr):
     
     return data
 
-def adjustQuery(queryStr,data):
-    
-    model = models.LsiModel.load('trainlsiciteulikemodel',mmap='r')
-    dictionary = corpora.Dictionary.load('trainciteulikedict')
-    reltexts = []
-    irreltexts = []
-    for piece in data :
-        if piece['rel']:
-            reltexts.append(piece['description'])
-        else :
-            irreltexts.append(piece['description'])
-    return updatequery(model,queryStr, reltexts, irreltexts,topN,dictionary)
-
+if count ==0 :
+    def adjustQuery(queryStr,data,irdocs):
+        
+        model = models.LsiModel.load('trainlsiciteulikemodel',mmap='r')
+        dictionary = corpora.Dictionary.load('trainciteulikedict')
+        reltexts = []
+        irreltexts = []
+        docs = []
+        for piece in irdocs :
+            if piece['rel']:
+                reltexts.append(piece['title']+piece['description'])
+            else :
+                irreltexts.append(piece['title']+piece['description'])
+        for piece in data:
+            docs.append(piece['title']+piece['description'])
+        adjustrank(model,dictionary,qtopics,docs,topN,reltexts,irreltexts)
+        
+        
+        query = preprocess(queryStr)
+        query2bow=dictionary.doc2bow(query)
+        qtopics = topicmodel[query2bow]
+        
+        return updatequery(model,queryStr, reltexts, irreltexts,topN,dictionary)
+else :
+    def adjustQuery(queryStr,docs,data):
+        return [3,5]
 
 #startQuery('hello')
 
-adjustQuery('hello', [])
+#adjustQuery('hello', [])

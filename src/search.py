@@ -16,6 +16,8 @@ from queryData import getQueryData
 from queryData import setQueryData
 from queryData import getQueryString
 from queryData import setQueryString
+from queryData import getQueryRank
+from queryData import setQueryRank
 from queryData import getCounter
 from queryData import incCounter
 from queryData import getKey
@@ -130,7 +132,7 @@ class Index:
             entities_name  = []
             thisurl = web.ctx.path+'?name='+namestr
             try:
-                rele_text = getQueryData(ident)
+                rele_text = [ getQueryData(ident)[x] for x in getQueryRank(ident) ]
             except TypeError,t:
                 raise web.seeother('/')
         form = []
@@ -145,6 +147,7 @@ class Index:
             data = []
         setQueryData(ident,data)
         setQueryString(ident,querystr)
+        setQueryRank(ident,range(5))
         
         
     def newQuery(self,rec,ident):
@@ -153,18 +156,23 @@ class Index:
         try:
             predata = getQueryData(ident)
             prestr = getQueryString(ident)
+            prerank = getQueryRank(ident)
         except TypeError,t:
             raise web.seeother('/')
+        irdocs = [ predata[x] for x in prerank ]
         for i in rec:
             #print rec
-            predata[int(i)]['rel'] = True
-        queryStr = adjustQuery(prestr,predata)
-        print 'new query: ' + queryStr
-        data = startSearch(queryStr)
-        if data is None:
-            data = []
+            irdocs[i]['rel'] = True
+        data = []
+        for i in range(len(predata)):
+            if i not in prerank or irdocs[i]['rel'] == True :
+                data.append(predata[i])
+        rank = adjustQuery(prestr,data,irdocs)
+        for ttx in data:
+            ttx['rel'] = False
         setQueryData(ident,data)
-        setQueryString(ident,queryStr)
+        #setQueryString(ident,queryStr)
+        setQueryRank(ident,rank)
     
     def clearQuery(self,ident):
         global query_cache
@@ -203,7 +211,7 @@ class Index:
             #收到相关反馈信息
             if i=='relelinks':
                 feedbackRec = web.input(relelinks=[])
-                self.newQuery(feedbackRec['relelinks'],cookie_name)
+                self.newQuery([int(x) for x in feedbackRec['relelinks']],cookie_name)
                 raise web.seeother(web.ctx.fullpath)
             #收到新的查询内容
             if i=='subject':
