@@ -165,7 +165,7 @@ class Index:
             irdocs[i]['rel'] = True
         data = []
         for i in range(len(predata)):
-            if i not in prerank or irdocs[i]['rel'] == True :
+            if i not in prerank or predata[i]['rel'] == True :
                 data.append(predata[i])
         rank = adjustQuery(prestr,data,irdocs)
         print rank
