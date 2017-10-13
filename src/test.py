@@ -96,7 +96,7 @@ def startSearch(queryStr):
     
     data = getData_baidu(soup)
 
-    body = requests.get(splashurl+'?url='+xsurl+queryStr +'&pn=20' )
+    body = requests.get(splashurl+'?url='+'http://xueshu.baidu.com/s?pn=10&wd='+queryStr )
     
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
