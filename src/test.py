@@ -8,6 +8,8 @@ import requests
 
 import sys
 
+import traceback
+
 count = 0
 try:
     from gensim import corpora
