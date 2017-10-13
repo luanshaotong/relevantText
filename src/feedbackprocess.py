@@ -102,27 +102,3 @@ def adjustrank(topicmodel,dictionary,qtopics,docs,topN,reltexts,irreltexts):
 
     return rerankeddocids
 
-###################################################
-#set dictpath, modelpath
-#load dictionary and topicmodel
-start=time()
-datadir = '../data/citeulike/'
-dictpath = '../data/citeulike/trainciteulikedict'
-modelpath = '../model/citeulike/trainlsiciteulikemodel'
-dictionary = corpora.Dictionary.load(dictpath)
-topicmodel = models.LsiModel.load(modelpath, mmap='r')
-print 'load took %.2f '%(time()-start)
-#transfer queryStr to topics
-queryStr = 'reinforcement learning a survey'
-query = preprocess(queryStr)
-query2bow=dictionary.doc2bow(query)
-qtopics = topicmodel[query2bow]
-#docs are search results, reltexts are relevant docs according to feedback, irreltexts are irrelevant docs according to feedback
-#docs are reranked according to rerankeddocids
-docs = [line.strip().lower().decode('ascii', 'ignore') for line in file(datadir + 'docs.txt')]
-reltexts=['a theory of the learnable']
-irreltexts=['adaptive query processing a survey']
-start=time()
-rerankeddocids = adjustrank(topicmodel,dictionary,qtopics,docs,10,reltexts,irreltexts)
-print 'adjustrank took %.2f '%(time()-start)
-print rerankeddocids[0:10]

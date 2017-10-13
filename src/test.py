@@ -91,7 +91,7 @@ if count ==0 :
         query2bow=dictionary.doc2bow(query)
         qtopics = topicmodel[query2bow]
         
-        return updatequery(model,queryStr, reltexts, irreltexts,topN,dictionary)
+        return updatequery(model,queryStr, reltexts, irreltexts,topN,dictionary)[0:5]
 else :
     def adjustQuery(queryStr,docs,data):
         return [3,5]

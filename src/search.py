@@ -168,6 +168,7 @@ class Index:
             if i not in prerank or irdocs[i]['rel'] == True :
                 data.append(predata[i])
         rank = adjustQuery(prestr,data,irdocs)
+        print rank
         for ttx in data:
             ttx['rel'] = False
         setQueryData(ident,data)
