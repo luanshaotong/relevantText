@@ -27,6 +27,8 @@ except Exception,e :
 
 from bs4 import BeautifulSoup
 
+from commonMethods import quote
+
 
 #from lxml.html._diffcommand import description
 
@@ -39,6 +41,12 @@ scurl = 'https://scholar.google.com/scholar?hl=zh-CN&num=20&as_sdt=0&q='
 
 splashurl = 'http://localhost:8050/render.html'
 
+headers = { "Accept":"text/html,application/xhtml+xml,application/xml;",
+            "Accept-Encoding":"gzip",
+            "Accept-Language":"zh-CN,zh;q=0.8",
+            "Referer":"http://www.example.com/",
+            "User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36"
+            }
 
 topN = 5
 
@@ -56,7 +64,7 @@ def getData_baidu(soup):
         print '\n##index' + str(ct)
         ct += 1
         piece = {}
-        piece['url'] = tagA.h3.a.get('href').encode('ascii')
+        piece['url'] = 'http://xueshu.baidu.com' +tagA.h3.a.get('href').encode('ascii')
         piece['title'] = ' '.join(tagA.h3.a.stripped_strings).encode('ascii','ignore')
         piece['description'] = ' '.join(tagA.find(class_='c_abstract').stripped_strings).split(u'来')[0].encode('ascii','ignore')
         piece['rel'] = False
@@ -90,13 +98,16 @@ def getData_google(soup):
     
 def startSearch(queryStr):
     
-    body = requests.get(splashurl+'?url='+xsurl+queryStr)
+    body = requests.get(splashurl+'?url=' +quote( xsurl+queryStr), headers=headers )
     
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
     data = getData_baidu(soup)
 
-    body = requests.get(splashurl+'?url='+'http://xueshu.baidu.com/s?pn=10&wd='+queryStr )
+    body = requests.get(splashurl+'?url=' +quote( xsurl+queryStr +'&pn=10'),headers=headers )
+    #body = requests.get(splashurl+'?url=' + xsurl+queryStr +'&pn=10&tn=SE_baiduxueshu_c1gjeupa&ie=utf-8&sc_hit=1' )
+    
+    #print body.text
     
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
