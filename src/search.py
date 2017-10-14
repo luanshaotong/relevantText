@@ -167,6 +167,8 @@ class Index:
         for i in range(len(predata)):
             if i not in prerank or predata[i]['rel'] == True :
                 data.append(predata[i])
+        if not data :
+            raise web.seeother('/')
         rank = adjustQuery(prestr,data,irdocs)
         #print rank
         for ttx in data:
