@@ -161,7 +161,7 @@ class Index:
             raise web.seeother('/')
         irdocs = [ predata[x] for x in prerank ]
         for i in rec:
-            #print rec
+            print rec
             irdocs[i]['rel'] = True
         data = []
         for i in range(len(predata)):
@@ -210,10 +210,11 @@ class Index:
         feedbackRec = None
         for i in form:
             #收到相关反馈信息
-            if i=='relelinks':
+            if i=='requery':
                 feedbackRec = web.input(relelinks=[])
-                self.newQuery([int(x) for x in feedbackRec['relelinks']],cookie_name)
-                raise web.seeother(web.ctx.fullpath)
+                #print feedbackRec['relelinks']
+                self.newQuery([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
+                raise web.seeother('/s?name='+form.name)
             #收到新的查询内容
             if i=='subject':
                 name = form.subject
