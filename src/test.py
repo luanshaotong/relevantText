@@ -146,6 +146,6 @@ else :
         return [3,5]
 
 
-startSearch('hello')
+#startSearch('hello')
 
 #adjustQuery('hello', [])
