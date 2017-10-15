@@ -216,7 +216,7 @@ class Index:
                 feedbackRec = web.input(relelinks=[])
                 #print feedbackRec['relelinks']
                 self.newQuery([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
-                raise web.seeother('/s?name='+form.name)
+                raise web.seeother('/s?name='+quote(form.name))
             #收到新的查询内容
             if i=='subject':
                 name = form.subject
