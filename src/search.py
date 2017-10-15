@@ -130,13 +130,16 @@ class Index:
             #print(rele_text)
         else :
             entities_name  = []
-            thisurl = web.ctx.path+'?name='+namestr
+            thisurl = web.ctx.path+'?name='+quote(namestr)
             try:
+                print '$2'
                 rele_text = [ getQueryData(ident)[x] for x in getQueryRank(ident) ]
+                print '$3'
             except TypeError,t:
                 raise web.seeother('/')
         form = []
         #print(web.ctx.fullpath.find('page'))
+        print '$4'
         return render.index(namestr,form, rele_text,page,thisurl)
     
     def initQuery(self,querystr,ident=0):
@@ -168,6 +171,7 @@ class Index:
             if i not in prerank or predata[i]['rel'] == True :
                 data.append(predata[i])
         if not data :
+            print '$0'
             raise web.seeother('/')
         rank = adjustQuery(prestr,data,irdocs)
         #print rank
@@ -216,6 +220,7 @@ class Index:
                 feedbackRec = web.input(relelinks=[])
                 #print feedbackRec['relelinks']
                 self.newQuery([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
+                print '$1'
                 raise web.seeother('/s?name='+quote(form.name))
             #收到新的查询内容
             if i=='subject':
