@@ -37,7 +37,7 @@ query = 'hello'
 
 xsurl = 'http://xueshu.baidu.com/s?wd='
 
-scurl = 'https://scholar.google.com/scholar?hl=zh-CN&num=20&as_sdt=0&q='
+scurl = 'https://scholar.google.com/scholar?num=20&as_sdt=0&q='
 
 splashurl = 'http://localhost:8050/render.html'
 
@@ -98,13 +98,13 @@ def getData_google(soup):
     
 def startSearch(queryStr):
     
-    body = requests.get(splashurl+'?url=' +quote( xsurl+queryStr), headers=headers )
+    body = requests.get(splashurl+'?url=' +quote( scurl+queryStr), headers=headers )
     
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
     data = getData_baidu(soup)
 
-    body = requests.get(splashurl+'?url=' +quote( xsurl+queryStr +'&pn=10'),headers=headers )
+    body = requests.get(splashurl+'?url=' +quote( scurl+queryStr +'&start=20'),headers=headers )
     #body = requests.get(splashurl+'?url=' + xsurl+queryStr +'&pn=10&tn=SE_baiduxueshu_c1gjeupa&ie=utf-8&sc_hit=1' )
     
     #print body.text
