@@ -37,7 +37,7 @@ query = 'hello'
 
 xsurl = 'http://xueshu.baidu.com/s?wd='
 
-scurl = 'https://scholar.google.com/scholar?num=20&as_sdt=0&q='
+scurl = 'https://xues.glgoo.com/scholar?num=20&as_sdt=0&q='
 
 splashurl = 'http://localhost:8050/render.html'
 
