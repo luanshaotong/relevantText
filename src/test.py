@@ -99,6 +99,7 @@ def getData_google(soup):
 def startSearch(queryStr):
     
     body = requests.get(splashurl+'?url=' +quote( scurl+queryStr), headers=headers )
+    print body.text
     
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
