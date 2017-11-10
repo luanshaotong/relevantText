@@ -21,6 +21,7 @@ from queryData import setQueryRank
 from queryData import getCounter
 from queryData import incCounter
 from queryData import getKey
+import formatfile.getCorpus as getDocs
 
 
 #from coursera_graph import findRelevantText

@@ -117,6 +117,26 @@ def startSearch(queryStr):
     
     return data
     
+def startsearch_local(querystr):
+    existedflag = True
+    datasettype = 'nips'  # 'citeulike'#
+    trainingset = datadir + 'abs'
+    stemflag = True
+    modeldir = '../model/topic/citeulike/'
+    num_topics = 200
+    trainflag = False
+    modelflag = 'lsi'  #'lsi'#
+    #1 is topic sims,2 is topic sims plus author sims
+    simflag=1
+    start = time()
+    docs, corpus, dictionary = getCorpus(
+                                              existedflag,\
+                                              datasettype,\
+                                              None,\
+                                              datadir,\
+                                              stemflag)
+    topicmodel = trainmodel(datasettype, trainflag, modelflag, num_topics, corpus, dictionary,modeldir)
+    topicindex = similarities.MatrixSimilarity(topicmodel[corpus])
 
 
 if count ==0 :
