@@ -193,4 +193,4 @@ if __name__ == '__main__':
     recallK = computeRK(recalllist, intervals)
     print 'computeRK recallK', recallK
 
-print 'the whole program took %.2f seconds to run.' % (time() - startfull)
+    print 'the whole program took %.2f seconds to run.' % (time() - startfull)

@@ -7,12 +7,15 @@ Created on 2017��1��25��
 
 import bsddb
 
+import configuration
+
 querystring = bsddb.btopen('querystring.db', 'c')
 
 querycache = bsddb.btopen('cache.db','c')
 
 queryrank = bsddb.btopen('ranks.db','c')
 
+abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')
 #help(bsddb)
 
 cookiecounter = bsddb.rnopen('counter.db','c')
@@ -30,7 +33,12 @@ def getQueryString(ident):
     return querystring.get(str(ident))
 
 def getQueryRank(ident):
+    #print queryrank.get(str(ident))
     return eval(queryrank.get(str(ident)))
+
+def getRelatext(index):
+    #print ranks
+    return eval(abshash.get(str(index)))
 
 def setQueryData(ident,data):
     querycache[str(ident)]=str(data)
@@ -49,3 +57,4 @@ try:
     getCounter()
 except TypeError,t:
     cookiecounter[1]='1025'
+    

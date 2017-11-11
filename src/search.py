@@ -4,14 +4,17 @@ import urllib
 import web
 import sys
 import StringIO
+import traceback
 from data_cache import buffered_answer
 from data_cache import buffered_entity
-from test import startSearch
+from test import startSearch_local
 from test import adjustQuery
 from CrawlBingData import accKey
 from commonMethods import quote
 from commonMethods import unquote
 #from ExtractorSummarization import ExtractorSummarization
+
+from queryData import getRelatext
 from queryData import getQueryData
 from queryData import setQueryData
 from queryData import getQueryString
@@ -21,7 +24,7 @@ from queryData import setQueryRank
 from queryData import getCounter
 from queryData import incCounter
 from queryData import getKey
-import formatfile.getCorpus as getDocs
+from formatfile import getCorpus as getDocs
 
 
 #from coursera_graph import findRelevantText
@@ -134,9 +137,12 @@ class Index:
             thisurl = web.ctx.path+'?name='+quote(namestr)
             try:
                 print '$2'
-                rele_text = [ getQueryData(ident)[x] for x in getQueryRank(ident) ]
+                print getQueryRank(ident)
+                rele_text = [ getRelatext(x) for x in getQueryRank(ident)]
                 print '$3'
             except TypeError,t:
+                print t
+                traceback.print_exc()
                 raise web.seeother('/')
         form = []
         #print(web.ctx.fullpath.find('page'))
@@ -146,12 +152,12 @@ class Index:
     def initQuery(self,querystr,ident=0):
         if ident == 0 :
             raise web.seeother('/')
-        data = startSearch(querystr)
+        rank, data = startSearch_local(querystr)
         if data is None:
             data = []
         setQueryData(ident,data)
         setQueryString(ident,querystr)
-        setQueryRank(ident,range(5))
+        setQueryRank(ident,rank[0:min(10,len(rank))])
         
         
     def newQuery(self,rec,ident):
@@ -163,24 +169,18 @@ class Index:
             prerank = getQueryRank(ident)
         except TypeError,t:
             raise web.seeother('/')
-        irdocs = [ predata[x] for x in prerank ]
+        #data = [ getRelatext(x) for x in prerank ]
+        rdocs = []
+        irdocs = []
+        for i in range(10):
+            irdocs.append(getRelatext(prerank[i]))
         for i in rec:
-            print rec
-            irdocs[i]['rel'] = True
-        data = []
-        for i in range(len(predata)):
-            if i not in prerank or predata[i]['rel'] == True :
-                data.append(predata[i])
-        if not data :
-            print '$0'
-            raise web.seeother('/')
-        rank = adjustQuery(prestr,data,irdocs)
+            irdocs[i]['rel']=True
+        rank,data = adjustQuery(predata,None,irdocs)
         #print rank
-        for ttx in data:
-            ttx['rel'] = False
         setQueryData(ident,data)
         #setQueryString(ident,queryStr)
-        setQueryRank(ident,rank[0:min(5,len(rank))])
+        setQueryRank(ident,rank[0:min(10,len(rank))])
     
     def clearQuery(self,ident):
         global query_cache

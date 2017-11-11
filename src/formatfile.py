@@ -216,17 +216,35 @@ def findsub(doc,tags):
             subdoc=doc
     return subdoc
 
-datadir = './'
+def adjustrank(topicmodel,topicindex, dictionary,query,reltexts,irreltexts):
+    query2bow = dictionary.doc2bow(query)
+    if len(reltexts) > 0:
+        for text in reltexts:
+            tokens = preprocess(text)
+            token2bow = dictionary.doc2bow(tokens)
+            query2bow.extend(token2bow)
+    qtopics = topicmodel[query2bow]
+    sims = topicindex[qtopics]
+    #sims is in the
+    sims = sorted(enumerate(sims), lambda x, y: cmp(x[1], y[1]), reverse=True)
+    
+    return zip(*sims)[0],query
+    # rerankeddocids = zipped[0]
+    # return rerankeddocids
 
-method ='topic'
-existedflag = True
-datasettype = 'nips'#'citeulike'  # 'nips'#
-trainingset = datadir + 'abs'
-stemflag = True
 
-processeddocs, corpus, dictionary = getCorpus(\
-                                              existedflag,\
-                                              datasettype,\
-                                              None, datadir, stemflag)
-
+if __name__ == '__main__':
+    datadir = './'
+    
+    method ='topic'
+    existedflag = True
+    datasettype = 'nips'#'citeulike'  # 'nips'#
+    trainingset = datadir + 'abs'
+    stemflag = True
+    
+    processeddocs, corpus, dictionary = getCorpus(\
+                                                  existedflag,\
+                                                  datasettype,\
+                                                  None, datadir, stemflag)
+    
 
