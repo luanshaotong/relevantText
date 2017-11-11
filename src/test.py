@@ -65,7 +65,7 @@ def getStdRef(title):
     start_urls = ('http://www.tudou.com/sec/%E8%90%8C%E7%89%A9?spm=a2h28.8313475.nav.dn_sec4')
     script = """ 
         function main(splash)
-            splash.scroll_position = {1000,700}
+            splash.scroll_position = {1000,1700}
             splash:go(splash.args.url)
             splash:wait(3)
             return {
@@ -130,7 +130,7 @@ def getData_google(soup):
     
 def startSearch(queryStr):
     
-    body = requests.get(splashurl+'?url=' +quote( scurl+queryStr), headers=headers )
+    body = requests.get(splashurl+'?url=' +quote(scurl+queryStr), headers=headers )
     print body.text
     
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')

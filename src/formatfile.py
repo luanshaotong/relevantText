@@ -8,6 +8,7 @@ from gensim import corpora
 from gensim.models.phrases import Phraser,Phrases
 from gensim import similarities
 import string
+import configuration
 # datadir = '../data/citeulike/'
 #####to combine titles and abs to one file with title+abs
 def combinetitleabsfile(titlefile,absfile,newfile):
@@ -234,7 +235,7 @@ def adjustrank(topicmodel,topicindex, dictionary,query,reltexts,irreltexts):
 
 
 if __name__ == '__main__':
-    datadir = './'
+    datadir = configuration.modelpath
     
     method ='topic'
     existedflag = True
