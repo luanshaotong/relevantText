@@ -218,7 +218,7 @@ else :
 
 if __name__ == '__main__':
     #startSearch_local('reinforcement learning a survey')
-    getStdRef('')
+    #getStdRef('')
     
     #os.remove(configuration.modelpath+'abs.db')
     abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')
