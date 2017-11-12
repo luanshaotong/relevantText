@@ -223,7 +223,7 @@ if __name__ == '__main__':
     #os.remove(configuration.modelpath+'abs.db')
     abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')
     file = open(configuration.modelpath+'abs')
-    ct = 1
+    ct = 0
     while True:  
         line = file.readline()
         if not line:  
