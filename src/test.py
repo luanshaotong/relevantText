@@ -16,6 +16,8 @@ import traceback
 
 import configuration
 
+import json
+
 from operator import itemgetter
 
 count = 0
@@ -61,26 +63,53 @@ headers = { "Accept":"text/html,application/xhtml+xml,application/xml;",
 
 topN = 5
 
+existedflag = True
+datasettype = 'citeulike'  # 'nips'#
+datadir = configuration.modelpath
+trainingset = datadir + 'abs'
+stemflag = True
+modeldir = configuration.modelpath
+num_topics = 200
+trainflag = False
+modelflag = 'lsi'  #'lsi'#
+#1 is topic sims,2 is topic sims plus author sims
+simflag=1
+#start = time()
+docs, corpus, dictionary = getCorpus(
+                                          existedflag,\
+                                          datasettype,\
+                                          trainingset,\
+                                          datadir,\
+                                          stemflag)
+topicmodel = trainmodel(datasettype, trainflag, modelflag, num_topics, corpus, dictionary,modeldir)
+topicindex = similarities.MatrixSimilarity(topicmodel[corpus])
+
 def getStdRef(title):
-    start_urls = ('http://www.tudou.com/sec/%E8%90%8C%E7%89%A9?spm=a2h28.8313475.nav.dn_sec4')
+    start_urls = ('http://xueshu.baidu.com/s?wd=paperuri%3A%28fe9f6db90244429441fc74a08f240f9d%29&filter=sc_long_sign&sc_ks_para=q%3DReinforcement%20Learning%3A%20A%20Survey&sc_us=2693735548158023755&tn=SE_baiduxueshu_c1gjeupa&ie=utf-8')
     script = """ 
         function main(splash)
-            splash.scroll_position = {1000,1700}
             splash:go(splash.args.url)
+            local elem = splash:select('.sc_q')
+            elem:mouse_click()
             splash:wait(3)
-            return {
-                html = splash:html()
-            }
+            return splash:html()
             end
         """
-    body = requests.get(splashurl+'?url='+start_urls, headers=headers,params={
-                    'lua_source':script,
-                    'endpoint':'execute'
-            }) 
+        
+    jsscript = """
+        var sub = document.getElementById("sc_q");
+        sub.click(); 
+        """
     
+    splashendpoint = 'http://localhost:8050/execute'
+    body = requests.get(splashendpoint+'?url='+quote(start_urls), headers=headers,params={
+                    'lua_source':script
+            }) 
+    #body = requests.get(splashurl+'?url='+quote(start_urls), headers=headers) 
+    #print body.text
     soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
-    print len(soup.find_all(class_='td-col')) 
+    print soup.find_all(class_='sc_quote_list_item_r')
 
 def getData_baidu(soup):
     
@@ -150,26 +179,7 @@ def startSearch(queryStr):
     return data
     
 def startSearch_local(queryStr):
-    existedflag = True
-    datasettype = 'citeulike'  # 'nips'#
-    datadir = configuration.modelpath
-    trainingset = datadir + 'abs'
-    stemflag = True
-    modeldir = configuration.modelpath
-    num_topics = 200
-    trainflag = False
-    modelflag = 'lsi'  #'lsi'#
-    #1 is topic sims,2 is topic sims plus author sims
-    simflag=1
-    #start = time()
-    docs, corpus, dictionary = getCorpus(
-                                              existedflag,\
-                                              datasettype,\
-                                              trainingset,\
-                                              datadir,\
-                                              stemflag)
-    topicmodel = trainmodel(datasettype, trainflag, modelflag, num_topics, corpus, dictionary,modeldir)
-    topicindex = similarities.MatrixSimilarity(topicmodel[corpus])
+
     query = preprocess(queryStr)
     query2bow = dictionary.doc2bow(query)
     qtopics = topicmodel[query2bow]
@@ -187,27 +197,6 @@ def startSearch_local(queryStr):
 if count ==0 :
     def adjustQuery(query,data,irdocs):
         
-        existedflag = True
-        datasettype = 'citeulike'  # 'nips'#
-        datadir = configuration.modelpath
-        trainingset = datadir + 'abs'
-        stemflag = True
-        modeldir = configuration.modelpath
-        num_topics = 200
-        trainflag = False
-        modelflag = 'lsi'  #'lsi'#
-        #1 is topic sims,2 is topic sims plus author sims
-        simflag=1
-        docs, corpus, dictionary = getCorpus(
-                                              existedflag,\
-                                              datasettype,\
-                                              trainingset,\
-                                              datadir,\
-                                              stemflag)
-        topicmodel = trainmodel(datasettype, trainflag, modelflag, num_topics, corpus, dictionary,modeldir)
-        topicindex = similarities.MatrixSimilarity(topicmodel[corpus])
-        #model = models.LsiModel.load('trainlsiciteulikemodel',mmap='r')
-        #dictionary = corpora.Dictionary.load('trainciteulikedict')
         reltexts = []
         irreltexts = []
         docs = []

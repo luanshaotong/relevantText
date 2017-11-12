@@ -7,8 +7,7 @@ import StringIO
 import traceback
 from data_cache import buffered_answer
 from data_cache import buffered_entity
-from test import startSearch_local
-from test import adjustQuery
+from test import startSearch_local,adjustQuery
 from CrawlBingData import accKey
 from commonMethods import quote
 from commonMethods import unquote
@@ -157,7 +156,7 @@ class Index:
             data = []
         setQueryData(ident,data)
         setQueryString(ident,querystr)
-        setQueryRank(ident,rank[0:min(10,len(rank))])
+        setQueryRank(ident,rank[0:min(30,len(rank))])
         
         
     def newQuery(self,rec,ident):
@@ -180,7 +179,7 @@ class Index:
         #print rank
         setQueryData(ident,data)
         #setQueryString(ident,queryStr)
-        setQueryRank(ident,rank[0:min(10,len(rank))])
+        setQueryRank(ident,rank[0:min(30,len(rank))])
     
     def clearQuery(self,ident):
         global query_cache

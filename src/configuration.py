@@ -5,4 +5,4 @@ Created on 2017年11月10日
 @author: luan
 '''
 
-modelpath = '..\\..\\model\\'
+modelpath = '../../model/'
