@@ -44,16 +44,16 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 					<tr>
 					
 						<td> <input type="checkbox" name="relelinks" value=$:i > </td>
-						<td class="title">  <a href=$:rele_text[i]['url']> $:rele_text[i]['title']</a></td>
+						<td class="title">  <a href=$:rele_text[i]['url'] target="_blank"> $:rele_text[i]['title']</a></td>
 					</tr>
 					<tr> 
 						<td> </td>
-						<td class="content"> $:rele_text[i]['description'] </td>
+						<td class="content"><p class="abs" id="abs-$i"> $:rele_text[i]['description'] </p></td>
 					</tr>
 				</table>
 			</dd>
 		</dl>
 		<button type="submit" class="button" formaction=$(fullpath+'&requery=true')>requery</button>
-		<button type="submit" class="button" formaction=$(fullpath+'&download=true')>summarize related work</button>
+		<button type="submit" class="button-d" formaction=$(fullpath+'&download=true')>summarize related work</button>
 		</form>
 		</div>

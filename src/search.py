@@ -56,7 +56,7 @@ def checkID():
     cookie_name = web.cookies().get("team-id")
     #print (cookie_name)
     if cookie_name is None or int(cookie_name) <= 1024:
-        web.setcookie("team-id", getCounter() , expires=3000, domain=None, secure=False)
+        web.setcookie("team-id", getCounter() , expires=30000, domain=None, secure=False)
         incCounter()
         raise web.seeother('/')
     return int(cookie_name)
@@ -69,11 +69,12 @@ class Download:
         print(cookie_name)
         print('\n')
         print(getKey())
-        file = ''
+        file = 'related work\r\n\r\n'
+        refe = 'references\r\n\r\n'
         #form = web.input()
         #rec = web.input(relelinks=[])
         try:
-            rel = list(getQueryRel(cookie_name))
+            rel = sorted(list(getQueryRel(cookie_name)))
         except TypeError,t:
             return 'Your cookie is out of date.'
         web.header('Content-type','text/plain')  #指定返回的类型  
@@ -81,15 +82,18 @@ class Download:
         web.header('Content-Disposition','attachment;filename=\
                 "summary of %s.txt"'%getQueryString(cookie_name))
         #print (rec['relelinks'])
+        ct = 1
         for i in rel:
             piece = getRelatext(i);
             try:
-                file += 'title:'+piece['title']+'\r\n'+'abstract:'+piece['description']+'\r\n'+'APA:'+getStdRef(piece['title'])+'\r\n'+'\r\n'
+                file += '['+str(ct)+']'+'title:'+piece['title']+'\r\n'+'abstract:'+piece['description']+'\r\n'+'\r\n'
+                refe += '['+str(ct)+']'+getStdRef(piece['title'])+'\r\n'
             except Exception,e:
                 print('Failed to summarize doc %s'%i['url'])
                 file = file+'\r\n'+i['description']+'\r\n'
+            ct += 1 
         sio = StringIO.StringIO()
-        sio.write(file)
+        sio.write(file+refe)
         return sio.getvalue()
 
     def POST(self):

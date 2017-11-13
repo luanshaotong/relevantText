@@ -110,7 +110,7 @@ def getStdRef(title):
     
     #print soup.find_all(class_='sc_quote_list_item_r')
     if body[0]=='{':
-        return ''
+        return 'Not available.'
     else :
         return body
 
@@ -221,7 +221,7 @@ else :
 
 if __name__ == '__main__':
     #startSearch_local('reinforcement learning a survey')
-    print getStdRef('web neue perspektiven fr marketing und medien')
+    print getStdRef('reinforcement learning a survey')
     
     #os.remove(configuration.modelpath+'abs.db')
     abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')
@@ -233,7 +233,7 @@ if __name__ == '__main__':
             break 
         line = line.split(':::')
         piece = {}
-        piece['url'] = ''
+        piece['url'] = 'https://scholar.google.com/scholar?q='+line[0]
         piece['title'] = line[0]
         piece['description'] = line[1]
         piece['rel'] = False
