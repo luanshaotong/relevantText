@@ -49,7 +49,7 @@ render = web.template.render('templates', base='base', globals=t_globals)
 
 #query_cache = {} 
 
-maxperpage =30
+maxperpage =10
 
 def checkID():
     global count
