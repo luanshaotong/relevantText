@@ -22,6 +22,8 @@ from queryData import getQueryRank
 from queryData import setQueryRank
 from queryData import getQueryRel
 from queryData import setQueryRel
+from queryData import getQueryDown
+from queryData import setQueryDown
 from queryData import getCounter
 from queryData import incCounter
 from queryData import getKey
@@ -65,10 +67,10 @@ class Download:
     
     def GET(self):
         cookie_name = checkID()
-        print('get:')
-        print(cookie_name)
-        print('\n')
-        print(getKey())
+        #print('get:')
+        #print(cookie_name)
+        #print('\n')
+        #print(getKey())
         file = 'related work\r\n\r\n'
         refe = 'references\r\n\r\n'
         #form = web.input()
@@ -98,10 +100,10 @@ class Download:
 
     def POST(self):
         cookie_name = checkID()
-        print('post:')
-        print(cookie_name)
-        print('\n')
-        print(getKey())
+        #print('post:')
+        #print(cookie_name)
+        #print('\n')
+        #print(getKey())
         file = ''
         form = web.input()
         if hasattr(form,'relelinks'):
@@ -138,17 +140,17 @@ class Index:
             entities_name  = []
             thisurl = web.ctx.path+'?name='+quote(namestr)
             try:
-                print '$2'
-                print getQueryRank(ident)
+                #print '$2'
+                #print getQueryRank(ident)
                 rele_text = [ getRelatext(x) for x in getQueryRank(ident)]
-                print '$3'
+                #print '$3'
             except TypeError,t:
-                print t
+                #print t
                 traceback.print_exc()
                 raise web.seeother('/')
         form = []
         #print(web.ctx.fullpath.find('page'))
-        print '$4'
+        #print '$4'
         return render.index(namestr,form, rele_text,page,thisurl)
     
     def initQuery(self,querystr,ident=0):
@@ -159,8 +161,9 @@ class Index:
             data = []
         setQueryData(ident,data)
         setQueryString(ident,querystr)
-        setQueryRank(ident,rank[0:min(maxperpage,len(rank))])
+        setQueryRank(ident,rank[0:maxperpage])
         setQueryRel(ident,set())
+        setQueryDown(ident,set())
         
         
     def newQuery(self,rec,ident):
@@ -171,6 +174,7 @@ class Index:
             prestr = getQueryString(ident)
             prerank = getQueryRank(ident)
             prerel = getQueryRel(ident)
+            predown = getQueryDown(ident)
         except TypeError,t:
             raise web.seeother('/')
         #data = [ getRelatext(x) for x in prerank ]
@@ -182,11 +186,24 @@ class Index:
             irdocs[i]['rel']=True
             prerel.add(prerank[i])
         rank,data = adjustQuery(predata,None,irdocs)
+        
+        
+        predown.update(prerank)
+        rank = rank[0:maxperpage+len(predown)]
+        tmprank = []
+        for i in rank:
+            if i not in predown:
+                tmprank.append(i)
+        
+        
+        #print tmprank
+        #print predown
         #print rank
         setQueryData(ident,data)
         #setQueryString(ident,queryStr)
-        setQueryRank(ident,rank[0:min(maxperpage,len(rank))])
+        setQueryRank(ident,tmprank[0:maxperpage])
         setQueryRel(ident,prerel)
+        setQueryDown(ident,predown)
     
     def clearQuery(self,ident):
         global query_cache
@@ -227,7 +244,7 @@ class Index:
                 feedbackRec = web.input(relelinks=[])
                 #print feedbackRec['relelinks']
                 self.newQuery([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
-                print '$1'
+                #print '$1'
                 if i=='download':
                     raise web.seeother('/d')
                 raise web.seeother('/s?name='+quote(form.name))

@@ -17,6 +17,8 @@ queryrank = bsddb.btopen('ranks.db','c')
 
 queryrel = bsddb.btopen('rel.db','c')
 
+querydown = bsddb.btopen('down.db','c')
+
 abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')
 #help(bsddb)
 
@@ -37,6 +39,9 @@ def getQueryString(ident):
 def getQueryRel(ident):
     return eval(queryrel.get(str(ident)))
 
+def getQueryDown(ident):
+    return eval(querydown.get(str(ident)))
+
 def getQueryRank(ident):
     #print queryrank.get(str(ident))
     return eval(queryrank.get(str(ident)))
@@ -53,6 +58,9 @@ def setQueryString(ident,namestr):
     
 def setQueryRank(ident,rank):
     queryrank[str(ident)]=str(rank)
+    
+def setQueryDown(ident,rank):
+    querydown[str(ident)]=str(rank)
     
 def setQueryRel(ident,rel):
     queryrel[str(ident)]=str(rel)
