@@ -65,7 +65,7 @@ topN = 5
 
 existedflag = True
 datasettype = 'citeulike'  # 'nips'#
-datadir = configuration.modelpath
+datadir = configuration.trainpath
 trainingset = datadir + 'abs'
 stemflag = True
 modeldir = configuration.modelpath

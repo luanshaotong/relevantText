@@ -6,3 +6,5 @@ Created on 2017年11月10日
 '''
 
 modelpath = '../../model/'
+
+trainpath = '../../model/'
