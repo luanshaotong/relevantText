@@ -89,27 +89,30 @@ def getStdRef(title):
     script = """ 
         function main(splash)
             splash:go(splash.args.url)
+            local title = splash:select('.t>a')
+            if title~=nil then
+                splash:go('http://xueshu.baidu.com'..title:getAttribute('href'))
+            end
             local elem = splash:select('.sc_q')
             elem:mouse_click()
-            splash:wait(3)
-            return splash:html()
-            end
+            splash:wait(0.5)
+            return splash:select('.sc_quote_list_item_r[data-type="APA"]').text()
+        end
         """
         
-    jsscript = """
-        var sub = document.getElementById("sc_q");
-        sub.click(); 
-        """
-    
     splashendpoint = 'http://localhost:8050/execute'
-    body = requests.get(splashendpoint+'?url='+quote(start_urls), headers=headers,params={
+    body = requests.get(splashendpoint+'?url='+quote(xsurl+title), headers=headers,params={
                     'lua_source':script
-            }) 
+            }).text
     #body = requests.get(splashurl+'?url='+quote(start_urls), headers=headers) 
     #print body.text
-    soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
+    #soup = BeautifulSoup(body.text.encode('utf-8'),'html5lib')
     
-    print soup.find_all(class_='sc_quote_list_item_r')
+    #print soup.find_all(class_='sc_quote_list_item_r')
+    if body[0]=='{':
+        return ''
+    else :
+        return body
 
 def getData_baidu(soup):
     
@@ -218,7 +221,7 @@ else :
 
 if __name__ == '__main__':
     #startSearch_local('reinforcement learning a survey')
-    #getStdRef('')
+    print getStdRef('web neue perspektiven fr marketing und medien')
     
     #os.remove(configuration.modelpath+'abs.db')
     abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')

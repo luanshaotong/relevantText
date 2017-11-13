@@ -7,7 +7,7 @@ import StringIO
 import traceback
 from data_cache import buffered_answer
 from data_cache import buffered_entity
-from test import startSearch_local,adjustQuery
+from test import startSearch_local,adjustQuery,getStdRef
 from CrawlBingData import accKey
 from commonMethods import quote
 from commonMethods import unquote
@@ -20,6 +20,8 @@ from queryData import getQueryString
 from queryData import setQueryString
 from queryData import getQueryRank
 from queryData import setQueryRank
+from queryData import getQueryRel
+from queryData import setQueryRel
 from queryData import getCounter
 from queryData import incCounter
 from queryData import getKey
@@ -47,7 +49,7 @@ render = web.template.render('templates', base='base', globals=t_globals)
 
 #query_cache = {} 
 
-#count =10
+maxperpage =30
 
 def checkID():
     global count
@@ -68,10 +70,10 @@ class Download:
         print('\n')
         print(getKey())
         file = ''
-        form = web.input()
-        rec = web.input(relelinks=[])
+        #form = web.input()
+        #rec = web.input(relelinks=[])
         try:
-            data = getQueryData(cookie_name)
+            rel = list(getQueryRel(cookie_name))
         except TypeError,t:
             return 'Your cookie is out of date.'
         web.header('Content-type','text/plain')  #指定返回的类型  
@@ -79,16 +81,13 @@ class Download:
         web.header('Content-Disposition','attachment;filename=\
                 "summary of %s.txt"'%getQueryString(cookie_name))
         #print (rec['relelinks'])
-        for i in data:
-            if i['rel']==True:
-                try:
-                    temp = ExtractorSummarization(i['url'])
-                    if len(temp)<10:
-                        raise 1
-                    file = file+'\r\n'+temp+'\r\n'
-                except Exception,e:
-                    print('Failed to summarize doc %s'%i['url'])
-                    file = file+'\r\n'+i['description']+'\r\n'
+        for i in rel:
+            piece = getRelatext(i);
+            try:
+                file += 'title:'+piece['title']+'\r\n'+'abstract:'+piece['description']+'\r\n'+'APA:'+getStdRef(piece['title'])+'\r\n'+'\r\n'
+            except Exception,e:
+                print('Failed to summarize doc %s'%i['url'])
+                file = file+'\r\n'+i['description']+'\r\n'
         sio = StringIO.StringIO()
         sio.write(file)
         return sio.getvalue()
@@ -156,7 +155,8 @@ class Index:
             data = []
         setQueryData(ident,data)
         setQueryString(ident,querystr)
-        setQueryRank(ident,rank[0:min(30,len(rank))])
+        setQueryRank(ident,rank[0:min(maxperpage,len(rank))])
+        setQueryRel(ident,set())
         
         
     def newQuery(self,rec,ident):
@@ -166,20 +166,23 @@ class Index:
             predata = getQueryData(ident)
             prestr = getQueryString(ident)
             prerank = getQueryRank(ident)
+            prerel = getQueryRel(ident)
         except TypeError,t:
             raise web.seeother('/')
         #data = [ getRelatext(x) for x in prerank ]
         rdocs = []
         irdocs = []
-        for i in range(10):
+        for i in range(maxperpage):
             irdocs.append(getRelatext(prerank[i]))
         for i in rec:
             irdocs[i]['rel']=True
+            prerel.add(prerank[i])
         rank,data = adjustQuery(predata,None,irdocs)
         #print rank
         setQueryData(ident,data)
         #setQueryString(ident,queryStr)
-        setQueryRank(ident,rank[0:min(30,len(rank))])
+        setQueryRank(ident,rank[0:min(maxperpage,len(rank))])
+        setQueryRel(ident,prerel)
     
     def clearQuery(self,ident):
         global query_cache
@@ -216,11 +219,13 @@ class Index:
         feedbackRec = None
         for i in form:
             #收到相关反馈信息
-            if i=='requery':
+            if i=='requery' or i=='download':
                 feedbackRec = web.input(relelinks=[])
                 #print feedbackRec['relelinks']
                 self.newQuery([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
                 print '$1'
+                if i=='download':
+                    raise web.seeother('/d')
                 raise web.seeother('/s?name='+quote(form.name))
             #收到新的查询内容
             if i=='subject':
