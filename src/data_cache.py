@@ -42,8 +42,8 @@ if __name__ == '__main__':
                     piece['description'] = match.group(1)
                 else :
                     match = re.search(pattern4,piece['description'])
-                    #if match is not None:
-                    piece['description'] = match.group(1)
+                    if match is not None:
+                        piece['description'] = match.group(1)
         else :
             match = re.search(pattern3,piece['description'])
             if match is not None:
