@@ -6,6 +6,8 @@ import configuration
 
 import re
 
+from commonMethods import quote
+
 if __name__ == '__main__':
     #os.remove(configuration.modelpath+'abs.db')
     abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')
@@ -17,7 +19,7 @@ if __name__ == '__main__':
             break 
         line = line.split(':::')
         piece = {}
-        piece['url'] = 'https://scholar.google.com/scholar?q='+line[0]
+        piece['url'] = 'https://scholar.google.com/scholar?q='+quote(line[0])
         piece['title'] = line[0]
         piece['description'] = line[1].lower()
         
