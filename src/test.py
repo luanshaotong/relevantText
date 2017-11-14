@@ -18,6 +18,8 @@ import configuration
 
 import json
 
+import re
+
 from operator import itemgetter
 
 count = 0
@@ -221,24 +223,9 @@ else :
 
 if __name__ == '__main__':
     #startSearch_local('reinforcement learning a survey')
-    print getStdRef('reinforcement learning a survey')
+    #print getStdRef('reinforcement learning a survey')
     
     #os.remove(configuration.modelpath+'abs.db')
     abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')
-    file = open(configuration.modelpath+'abs')
-    ct = 0
-    while True:  
-        line = file.readline()
-        if not line:  
-            break 
-        line = line.split(':::')
-        piece = {}
-        piece['url'] = 'https://scholar.google.com/scholar?q='+line[0]
-        piece['title'] = line[0]
-        piece['description'] = line[1]
-        piece['rel'] = False
-        abshash[str(ct)] = str(piece)
-        ct = ct + 1
-    
 
 #adjustQuery('hello', [])

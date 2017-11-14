@@ -5,8 +5,6 @@ import web
 import sys
 import StringIO
 import traceback
-from data_cache import buffered_answer
-from data_cache import buffered_entity
 from test import startSearch_local,adjustQuery,getStdRef
 from CrawlBingData import accKey
 from commonMethods import quote
