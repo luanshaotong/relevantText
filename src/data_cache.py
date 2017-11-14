@@ -51,7 +51,7 @@ if __name__ == '__main__':
                 
         if piece['description'] == None:
             raise 1
-        print piece['description']
+        #print piece['description']
 
         piece['rel'] = False
         abshash[str(ct)] = str(piece)
