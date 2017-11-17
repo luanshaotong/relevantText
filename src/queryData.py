@@ -44,6 +44,9 @@ def getQueryRel(ident):
 def getQueryDown(ident):
     return eval(querydown.get(str(ident)))
 
+def getQueryTemp(ident):
+    return eval(queryfktemp.get(str(ident)))
+
 def getQueryRank(ident):
     #print queryrank.get(str(ident))
     return eval(queryrank.get(str(ident)))

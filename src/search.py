@@ -22,6 +22,8 @@ from queryData import getQueryRel
 from queryData import setQueryRel
 from queryData import getQueryDown
 from queryData import setQueryDown
+from queryData import getQueryTemp
+from queryData import setQueryTemp
 from queryData import getCounter
 from queryData import incCounter
 from queryData import getKey
@@ -74,7 +76,9 @@ class Download:
         #form = web.input()
         #rec = web.input(relelinks=[])
         try:
-            rel = sorted(list(getQueryRel(cookie_name)))
+            temp = getQueryTemp(cookie_name)
+            temp.extend(list(getQueryRel(cookie_name)))
+            rel = sorted(temp)
         except TypeError,t:
             return 'Your cookie is out of date.'
         web.header('Content-type','text/plain')  #指定返回的类型  
@@ -164,6 +168,13 @@ class Index:
         setQueryDown(ident,set())
         
         
+    def newDownload(self,rec,ident):
+        prerank = getQueryRank(ident)
+        pretemp = []
+        for i in rec:
+            pretemp.append(prerank[i])
+        setQueryTemp(ident,pretemp)
+        
     def newQuery(self,rec,ident):
         if ident is None:
             raise web.seeother('/')
@@ -242,6 +253,7 @@ class Index:
                 feedbackRec = web.input(relelinks=[])
                 #print feedbackRec['relelinks']
                 if i=='download':
+                    self.newDownload([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
                     raise web.seeother('/d')
                 self.newQuery([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
                 #print '$1'
