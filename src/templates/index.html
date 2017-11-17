@@ -15,7 +15,6 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 			</td>
 		</tr>
 		<tr>
-			<td class="content">
 			<table>
 				$if len(form_entities)>0:
 					<td class="check">
@@ -24,11 +23,11 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 						<input type="radio" name="entities" value=$:entity[0] $:entity[1]>$:entity[0]
 					</div>
 					</td>
-				<td>
-				<button type="submit" class="button">submit</button>
-				</td>
+				<td><button type="submit" class="button">search</button></td>
+				<td><button type="submit" class="button-d" formaction=$(fullpath+'&requery=true')>feedback search</button></td>
+				<td><button type="submit" class="button-d" formaction=$(fullpath+'&download=true')>summarize related work</button></td>
+				
 			</table>
-			</td>
 		</tr>
 		</table>
 		</form>
@@ -53,7 +52,9 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 				</table>
 			</dd>
 		</dl>
-		<button type="submit" class="button" formaction=$(fullpath+'&requery=true')>requery</button>
-		<button type="submit" class="button-d" formaction=$(fullpath+'&download=true')>summarize related work</button>
+		<table class="btnarray">
+		<td> <button type="submit" class="button-d" formaction=$(fullpath+'&requery=true')>feedback search</button> </td>
+		<td> <button type="submit" class="button-d" formaction=$(fullpath+'&download=true')>summarize related work</button> </td>
+		</table>
 		</form>
 		</div>
