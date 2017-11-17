@@ -19,6 +19,8 @@ queryrel = bsddb.btopen('rel.db','c')
 
 querydown = bsddb.btopen('down.db','c')
 
+queryfktemp = bsddb.btopen('temp.db','c')
+
 abshash = bsddb.hashopen(configuration.modelpath+'abs.db','c')
 #help(bsddb)
 
@@ -65,6 +67,9 @@ def setQueryDown(ident,rank):
 def setQueryRel(ident,rel):
     queryrel[str(ident)]=str(rel)
     
+def setQueryTemp(ident,rel):
+    queryfktemp[str(ident)]=str(rel)
+
 def getKey():
     return querycache.keys()
     

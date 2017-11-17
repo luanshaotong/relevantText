@@ -241,10 +241,10 @@ class Index:
             if i=='requery' or i=='download':
                 feedbackRec = web.input(relelinks=[])
                 #print feedbackRec['relelinks']
-                self.newQuery([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
-                #print '$1'
                 if i=='download':
                     raise web.seeother('/d')
+                self.newQuery([] if feedbackRec['relelinks'] is None else [int(x) for x in feedbackRec['relelinks']],cookie_name)
+                #print '$1'
                 raise web.seeother('/s?name='+quote(form.name))
             #收到新的查询内容
             if i=='subject':
