@@ -25,17 +25,15 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 					</td>
 				<td><button type="submit" class="button">search</button></td>
 				<td><button type="submit" class="button-d" formaction=$(fullpath+'&requery=true')>feedback search</button></td>
-				<td><button type="submit" class="button-d" formaction=$(fullpath+'&download=true')>summarize related work</button></td>
+				<td><button type="botton" class="button-d" formaction=$(fullpath+'&download=true')>summarize related work</button></td>
 				
 			</table>
 		</tr>
 		</table>
-		</form>
 
 	$if rele_text is not None and len(rele_text)>0 :  
 		<div class="content">
 			<h2> Result </h2>
-		<form name = "feedback" method="post">
 	    <dl>
 		$for i in range(len(rele_text)):
 			<dd>
@@ -56,5 +54,5 @@ $def with (namestr, form_entities, rele_text, page=1,fullpath='/')
 		<td> <button type="submit" class="button-d" formaction=$(fullpath+'&requery=true')>feedback search</button> </td>
 		<td> <button type="submit" class="button-d" formaction=$(fullpath+'&download=true')>summarize related work</button> </td>
 		</table>
-		</form>
 		</div>
+		</form>

@@ -8,3 +8,4 @@ counter
 .pydevproject*
 .settings/*
 src/*.npy
+*.bat
