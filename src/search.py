@@ -93,8 +93,8 @@ class Download:
                 file += '['+str(ct)+']'+'title:'+piece['title']+'\r\n'+'abstract:'+piece['description']+'\r\n'+'\r\n'
                 refe += '['+str(ct)+']'+getStdRef(piece['title'])+'\r\n'
             except Exception,e:
-                print('Failed to summarize doc %s'%i['url'])
-                file = file+'\r\n'+i['description']+'\r\n'
+                print('Failed to summarize doc %s'%piece['url'])
+                file = file+'\r\n'+piece['description']+'\r\n'
             ct += 1 
         sio = StringIO.StringIO()
         sio.write(file+refe)
