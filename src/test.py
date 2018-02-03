@@ -104,7 +104,7 @@ def getStdRef(title):
         end
         """
         
-    splashendpoint = 'http://localhost:8050/execute'
+    splashendpoint = 'http://'+splash_server+'/execute'
     body = requests.get(splashendpoint+'?url='+quote(xsurl+title), headers=headers,params={
                     'lua_source':script
             }).text

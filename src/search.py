@@ -89,12 +89,12 @@ class Download:
         ct = 1
         for i in rel:
             piece = getRelatext(i);
-            #try:
-            file += '['+str(ct)+']'+'title:'+piece['title']+'\r\n'+'abstract:'+piece['description']+'\r\n'+'\r\n'
-            refe += '['+str(ct)+']'+getStdRef(piece['title'])+'\r\n'
-            #except Exception,e:
-            #    print('Failed to summarize doc %s'%piece['url'])
-            #    file = file+'\r\n'+piece['description']+'\r\n'
+            try:
+                file += '['+str(ct)+']'+'title:'+piece['title']+'\r\n'+'abstract:'+piece['description']+'\r\n'+'\r\n'
+                refe += '['+str(ct)+']'+getStdRef(piece['title'])+'\r\n'
+            except Exception,e:
+                print('Failed to summarize doc %s'%piece['url'])
+                file = file+'\r\n'+piece['description']+'\r\n'
             ct += 1 
         sio = StringIO.StringIO()
         sio.write(file+refe)
