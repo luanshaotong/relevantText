@@ -44,6 +44,8 @@ from bs4 import BeautifulSoup
 
 from commonMethods import quote
 
+from configuration import splash_server
+
 
 #from lxml.html._diffcommand import description
 
@@ -54,7 +56,7 @@ xsurl = 'http://xueshu.baidu.com/s?wd='
 
 scurl = 'https://xues.glgoo.com/scholar?num=20&as_sdt=0&q='
 
-splashurl = 'http://localhost:8050/render.html'
+splashurl = 'http://'+splash_server+'/render.html'
 
 headers = { "Accept":"text/html,application/xhtml+xml,application/xml;",
             "Accept-Encoding":"gzip",
